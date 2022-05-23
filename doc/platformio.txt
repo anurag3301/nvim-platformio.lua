@@ -1,0 +1,21 @@
+*platformio.txt* Wrapper of PlatfromIO for neovim
+
+Author:  Anurag Kumar Singh
+Repo:    https://github.com/anurag3301/nvim-platformio.lua
+License: MIT
+
+
+INTRODUCTION                                                   *PlatfromIO*
+
+A plugin for wrapping platformio command with user-friendly neovim commands
+
+==============================================================================
+
+USAGE                                                    *platformio-usage*
+
+
+                                                                 *:Pioinit*
+:Pioinit [board]         Open neovim in a fresh directory for the project and 
+                         run `:Pioinit` with a board-name as argument to
+                         initialise platformio. Eg `:Pioinit uno`
+==============================================================================

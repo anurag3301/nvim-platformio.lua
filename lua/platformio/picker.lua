@@ -3,7 +3,7 @@ local json_str = handel:read("*a")
 handel:close()
 
 local json_data = require('lunajson').decode(json_str)
-local board_data = {}
+board_data = {}
 local board_names = {}
 
 for i,v in pairs(json_data) do
@@ -16,6 +16,7 @@ local finders = require "telescope.finders"
 local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
+local selected_board_id, selected_board_name, selected_board_framework
 
 local opts = opts or {}
 pickers.new(opts, {
@@ -27,11 +28,29 @@ pickers.new(opts, {
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-        print(selection[1], board_data[selection[1]]['id'])
+        selected_board_name = selection[1]
+        selected_board_id = board_data[selection[1]]['id']
+        framework_pick()
       end)
       return true
     end,
     sorter = conf.generic_sorter(opts),
 }):find()
 
-
+function framework_pick()
+    pickers.new(opts, {
+        prompt_title = "frameworks",
+        finder = finders.new_table{
+            results = board_data[selected_board_name]['frameworks'],
+        },
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            selected_board_framework = selection[1]
+          end)
+          return true
+        end,
+        sorter = conf.generic_sorter(opts),
+    }):find()
+end

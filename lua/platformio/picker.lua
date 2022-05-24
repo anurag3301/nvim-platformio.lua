@@ -7,27 +7,34 @@ local board_data = {}
 local board_names = {}
 
 for i,v in pairs(json_data) do
-    board_data[v['name']] = v
+    board_data[v['name']] = vim.inspect(v)
     table.insert(board_names, v['name'])
 end
-
--- for i,v in pairs(board_name) do
---     print(i, v)
--- end
 
 local pickers = require "telescope.pickers"
 local finders = require "telescope.finders"
 local conf = require("telescope.config").values
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
 
 local pick_board= function(opts)
   opts = opts or {}
   pickers.new(opts, {
     prompt_title = "Boards",
-    finder = finders.new_table {
-      results = board_names
+    finder = finders.new_table{
+        results = board_names,
     },
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        print(selection[1])
+      end)
+      return true
+    end,
     sorter = conf.generic_sorter(opts),
   }):find()
 end
+
 
 pick_board()

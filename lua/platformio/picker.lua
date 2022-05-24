@@ -18,24 +18,26 @@ local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local selected_board_id, selected_board_name, selected_board_framework
 
-local opts = opts or {}
-pickers.new(opts, {
-    prompt_title = "Boards",
-    finder = finders.new_table{
-        results = board_names,
-    },
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        actions.close(prompt_bufnr)
-        local selection = action_state.get_selected_entry()
-        selected_board_name = selection[1]
-        selected_board_id = board_data[selection[1]]['id']
-        framework_pick()
-      end)
-      return true
-    end,
-    sorter = conf.generic_sorter(opts),
-}):find()
+local pick_board = function()
+    local opts = opts or {}
+    pickers.new(opts, {
+        prompt_title = "Boards",
+        finder = finders.new_table{
+            results = board_names,
+        },
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            selected_board_name = selection[1]
+            selected_board_id = board_data[selection[1]]['id']
+            framework_pick()
+          end)
+          return true
+        end,
+        sorter = conf.generic_sorter(opts),
+    }):find()
+end
 
 function framework_pick()
     pickers.new(opts, {
@@ -54,3 +56,5 @@ function framework_pick()
         sorter = conf.generic_sorter(opts),
     }):find()
 end
+
+pick_board()

@@ -17,9 +17,8 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
-local pick_board= function(opts)
-  opts = opts or {}
-  pickers.new(opts, {
+local opts = opts or {}
+pickers.new(opts, {
     prompt_title = "Boards",
     finder = finders.new_table{
         results = board_names,
@@ -33,8 +32,6 @@ local pick_board= function(opts)
       return true
     end,
     sorter = conf.generic_sorter(opts),
-  }):find()
-end
+}):find()
 
 
-pick_board()

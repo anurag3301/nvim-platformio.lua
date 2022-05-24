@@ -9,7 +9,7 @@ local action_state = require "telescope.actions.state"
 local board_data = {}
 local board_names = {}
 local selected_board_id, selected_board_name, selected_board_framework
-
+local extra = 'echo \"\\\\n\\\\033[0;33mPlease Press ENTER to continue \\\\033[0m\"; read; exit;'
 
 function pick_framework()
     pickers.new(opts, {
@@ -23,6 +23,7 @@ function pick_framework()
             local selection = action_state.get_selected_entry()
             selected_board_framework = selection[1]
             print(selected_board_name, selected_board_id, selected_board_framework)
+            vim.cmd("2TermExec cmd='pio project init --board ".. selected_board_id .. "; " .. extra .. "' direction=float")
           end)
           return true
         end,
@@ -67,7 +68,6 @@ function M.pioinit(board)
     pick_board()
 
 
-    -- vim.cmd("2TermExec cmd='pio project init --board ".. selected_board_id .. "' direction=float")
 
 end
 

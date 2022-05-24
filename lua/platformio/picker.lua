@@ -7,7 +7,7 @@ local board_data = {}
 local board_names = {}
 
 for i,v in pairs(json_data) do
-    board_data[v['name']] = vim.inspect(v)
+    board_data[v['name']] = v
     table.insert(board_names, v['name'])
 end
 
@@ -28,7 +28,7 @@ local pick_board= function(opts)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-        print(selection[1])
+        print(selection[1], board_data[selection[1]]['id'])
       end)
       return true
     end,

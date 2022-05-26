@@ -22,7 +22,6 @@ function pick_framework()
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
             selected_board_framework = selection[1]
-            print(selected_board_name, selected_board_id, selected_board_framework)
             vim.cmd("2TermExec cmd='pio project init --board ".. selected_board_id .. " --project-option=\"framework=" .. selected_board_framework .. "\"; " .. extra .. "' direction=float")
           end)
           return true

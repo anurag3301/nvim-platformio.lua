@@ -1,1 +1,1 @@
-command Pioinit lua require('platformio').pioinit()
+command Pioinit lua require('platformio.pioinitialise').pioinit()

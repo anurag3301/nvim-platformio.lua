@@ -11,7 +11,7 @@ local board_names = {}
 local selected_board_id, selected_board_name, selected_board_framework
 local extra = 'echo \"\\\\n\\\\033[0;33mPlease Press ENTER to continue \\\\033[0m\"; read; exit;'
 
-function pick_framework()
+local function pick_framework()
     pickers.new(opts, {
         prompt_title = "frameworks",
         finder = finders.new_table{
@@ -62,12 +62,7 @@ function M.pioinit(board)
         board_data[v['name']] = v
         table.insert(board_names, v['name'])
     end
-
-
     pick_board()
-
-
-
 end
 
 return M

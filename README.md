@@ -35,4 +35,10 @@ Search and chose the required board from the Telescope picker, now select the re
 
 Now you have the project configured
 
+
+
+https://user-images.githubusercontent.com/52702259/170633466-c8c31705-488b-4f41-99b3-cb89a4fb3c0b.mp4
+
+
+
 ### More stuff comming soon

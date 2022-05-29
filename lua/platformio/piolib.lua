@@ -4,8 +4,8 @@ local http = require("socket.http")
 local ltn12 = require("ltn12")
 
 function M.piolib(lib_arg_list)
-    json_str = ""
-    lib_str = ""
+    local json_str = ""
+    local lib_str = ""
     local lib_name = {}
     local lib_data = {}
     local resp= {}
@@ -36,6 +36,6 @@ function M.piolib(lib_arg_list)
     end
 end
 
-M.piolib({'Arduino', 'Json'})
+-- M.piolib({'Arduino', 'Json'})
 
 return M

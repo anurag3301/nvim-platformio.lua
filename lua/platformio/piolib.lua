@@ -3,6 +3,33 @@ local M = {}
 local http = require("socket.http")
 local ltn12 = require("ltn12")
 
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local conf = require("telescope.config").values
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
+-- local utils = require('platformio.utils')
+
+local function pick_library(args)
+    opts = {}
+    pickers.new(opts, {
+        prompt_title = "Libraries",
+        finder = finders.new_table{
+            results = args.lib_name,
+        },
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            selected_library = selection[1]
+            print(selected_library)
+          end)
+          return true
+        end,
+        sorter = conf.generic_sorter(opts),
+    }):find()
+end
+
 function M.piolib(lib_arg_list)
     local json_str = ""
     local lib_str = ""
@@ -32,10 +59,11 @@ function M.piolib(lib_arg_list)
         end
 
         -- print(vim.inspect(lib_data))
-        print(vim.inspect(lib_name))
+        -- print(vim.inspect(lib_name))
+        pick_library({['lib_name']=lib_name, ['lib_data']=lib_data})
     end
 end
 
--- M.piolib({'Arduino', 'Json'})
+M.piolib({'Arduino', 'Json'})
 
 return M

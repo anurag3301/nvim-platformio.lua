@@ -12,6 +12,11 @@ function M.pioupload()
     vim.cmd("2TermExec cmd='pio run --target upload; " .. utils.extra .. "' direction=float")
 end
 
+function M.pioclean()
+    utils.cd_pioini()
+    vim.cmd("2TermExec cmd='pio run --target clean; " .. utils.extra .. "' direction=float")
+end
+
 function M.piorun(arg)
     if(arg == nil)then
         arg = 'upload'
@@ -22,8 +27,10 @@ function M.piorun(arg)
         M.pioupload()
     elseif(arg == 'build')then
         M.piobuild()
+    elseif(arg == 'clean')then
+        M.pioclean()
     else
-        print("Invalid argument: upload or build")
+        print("Invalid argument: build, upload or clean")
     end
 
 end

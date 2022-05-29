@@ -15,6 +15,15 @@ if (code == 200) then
     for k,v in pairs(resp) do
         json_str = json_str .. v
     end
-    print(json_str)
+    local json_data = require('lunajson').decode(json_str)
+    local lib_name = {}
+    local lib_data = {}
+
+    for k,v in pairs(json_data['items']) do
+        lib_data[v['name']] = v
+        table.insert(lib_name, v['name'])
+    end
+
+    print(vim.inspect(lib_data))
 end
 

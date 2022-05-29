@@ -8,7 +8,7 @@ local finders = require "telescope.finders"
 local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
--- local utils = require('platformio.utils')
+local utils = require('platformio.utils')
 
 local function pick_library(args)
     opts = {}
@@ -22,7 +22,8 @@ local function pick_library(args)
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
             selected_library = selection[1]
-            print(selected_library)
+            local pkg_name = args['lib_data'][selected_library]['owner']['username'] .. "/" .. selected_library
+            vim.cmd("2TermExec cmd='pio pkg install --library \"".. pkg_name .. "\"; " .. utils.extra .. "' direction=float")
           end)
           return true
         end,
@@ -64,6 +65,6 @@ function M.piolib(lib_arg_list)
     end
 end
 
-M.piolib({'Arduino', 'Json'})
+-- M.piolib({'Arduino', 'Json'})
 
 return M

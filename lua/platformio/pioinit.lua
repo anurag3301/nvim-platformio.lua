@@ -56,9 +56,19 @@ function M.pioinit(board)
     
     if not utils.pio_install_check() then return end
 
-    local handel = io.popen('pio boards --json-output')
+    local command = 'pio boards --json-output'
+    local handel = io.popen(command .. ' 2>/dev/null')
     local json_str = handel:read("*a")
     handel:close()
+
+    if #json_str == 0 then
+        local handel = io.popen(command .. ' 2>&1')
+        local command_output = handel:read("*a")
+        handel:close()
+        vim.notify("Some error occured while executing `" ..command.. "`', command output: \n", vim.log.levels.WARN)
+        print(command_output)
+        return
+    end
 
     local json_data = require('lunajson').decode(json_str)
 

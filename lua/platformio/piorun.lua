@@ -30,7 +30,7 @@ function M.piorun(arg)
     elseif(arg == 'clean')then
         M.pioclean()
     else
-        print("Invalid argument: build, upload or clean")
+        vim.notify("Invalid argument: build, upload or clean", vim.log.levels.WARN)
     end
 
 end

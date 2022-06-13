@@ -33,7 +33,7 @@ end
 function M.pio_install_check()
     local pio_path = assert(io.popen('which pio 2>/dev/null'):read("*a"))
     if #pio_path == 0 then
-        print("Platformio not found in the path")
+        vim.notify("Platformio not found in the path", vim.log.levels.ERROR)
         return false
     end
     return true

@@ -12,6 +12,7 @@ local board_names = {}
 local selected_board_id, selected_board_name, selected_board_framework
 
 local function pick_framework()
+    local opts = opts or {}
     pickers.new(opts, {
         prompt_title = "frameworks",
         finder = finders.new_table{
@@ -30,7 +31,7 @@ local function pick_framework()
     }):find()
 end
 
-local pick_board = function()
+local function pick_board ()
     local opts = opts or {}
     pickers.new(opts, {
         prompt_title = "Boards",
@@ -52,6 +53,9 @@ local pick_board = function()
 end
 
 function M.pioinit(board)
+    
+    if not utils.pio_install_check() then return end
+
     local handel = io.popen('pio boards --json-output')
     local json_str = handel:read("*a")
     handel:close()

@@ -30,4 +30,13 @@ function M.cd_pioini()
     vim.cmd('cd ' .. inipath)
 end
 
+function M.pio_install_check()
+    local pio_path = assert(io.popen('which pio 2>/dev/null'):read("*a"))
+    if #pio_path == 0 then
+        print("Platformio not found in the path")
+        return false
+    end
+    return true
+end
+
 return M

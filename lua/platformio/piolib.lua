@@ -32,6 +32,8 @@ local function pick_library(args)
 end
 
 function M.piolib(lib_arg_list)
+    if not utils.pio_install_check() then return end
+
     local json_str = ""
     local lib_str = ""
     local lib_name = {}
@@ -59,12 +61,13 @@ function M.piolib(lib_arg_list)
             table.insert(lib_name, v['name'])
         end
 
-        -- print(vim.inspect(lib_data))
-        -- print(vim.inspect(lib_name))
         pick_library({['lib_name']=lib_name, ['lib_data']=lib_data})
+    else
+        vim.notify("API Request to platformio return HTTP code: " .. 
+        code .. "\nplease run `curl -LI " .. url .. "` for complete information", 
+        vim.log.levels.ERROR)
+        
     end
 end
-
--- M.piolib({'Arduino', 'Json'})
 
 return M

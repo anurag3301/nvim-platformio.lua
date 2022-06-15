@@ -12,7 +12,7 @@ local board_names = {}
 local selected_board_id, selected_board_name, selected_board_framework
 
 local function pick_framework()
-    local opts = opts or {}
+    local opts = {}
     pickers.new(opts, {
         prompt_title = "frameworks",
         finder = finders.new_table{
@@ -32,7 +32,7 @@ local function pick_framework()
 end
 
 local function pick_board ()
-    local opts = opts or {}
+    local opts = {}
     pickers.new(opts, {
         prompt_title = "Boards",
         finder = finders.new_table{

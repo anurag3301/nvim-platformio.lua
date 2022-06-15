@@ -11,7 +11,7 @@ local action_state = require "telescope.actions.state"
 local utils = require('platformio.utils')
 
 local function pick_library(args)
-    opts = {}
+    local opts = {}
     pickers.new(opts, {
         prompt_title = "Libraries",
         finder = finders.new_table{
@@ -44,9 +44,9 @@ function M.piolib(lib_arg_list)
         lib_str = lib_str .. v 
     end
 
-    url = 'https://api.registry.platformio.org/v3/search?query=%22' .. lib_str .. '%22&page=1&limit=50'
+    local url = 'https://api.registry.platformio.org/v3/search?query=%22' .. lib_str .. '%22&page=1&limit=50'
 
-    client, code, headers, status = http.request{url=url, sink=ltn12.sink.table(resp), method="GET"}
+    local client, code, headers, status = http.request{url=url, sink=ltn12.sink.table(resp), method="GET"}
 
     if (code == 200) then
 

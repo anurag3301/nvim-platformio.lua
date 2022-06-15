@@ -18,6 +18,8 @@ function M.pioclean()
 end
 
 function M.piorun(arg)
+    if not utils.pio_install_check() then return end
+
     if(arg == nil)then
         arg = 'upload'
     end

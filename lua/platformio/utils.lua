@@ -10,8 +10,11 @@ function M.strsplit (inputstr)
     return t
 end
 
+local function pathmul(n)
+    return '..' .. string.rep('/..', n)
+end
 
-local paths = {'.', '..', '../..', '../../..'}
+local paths = {'.', '..', pathmul(1), pathmul(2), pathmul(3), pathmul(4), pathmul(5)}
 local inipath = ''
 
 function M.file_exists(name)

@@ -15,7 +15,6 @@ local function pathmul(n)
 end
 
 local paths = {'.', '..', pathmul(1), pathmul(2), pathmul(3), pathmul(4), pathmul(5)}
-local inipath = ''
 
 function M.file_exists(name)
    local f=io.open(name,"r")
@@ -23,14 +22,13 @@ function M.file_exists(name)
 end
 
 function M.cd_pioini()
-    for k, v in pairs(paths) do
-        if M.file_exists(v .. '/platformio.ini') then
-            inipath = v
+    for k, path in pairs(paths) do
+        if M.file_exists(path .. '/platformio.ini') then
+            vim.cmd('cd ' .. path)
             break
         end
     end
 
-    vim.cmd('cd ' .. inipath)
 end
 
 function M.pio_install_check()

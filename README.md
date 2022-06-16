@@ -22,7 +22,7 @@ use {
     requires = {
         {'akinsho/nvim-toggleterm.lua'},
         {'nvim-telescope/telescope.nvim'},
-        {'nvim-lua/plenary.nvim'
+        {'nvim-lua/plenary.nvim'},
     }
 }
 ```

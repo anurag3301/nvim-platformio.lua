@@ -14,7 +14,7 @@ A plugin for wrapping platformio command with user-friendly neovim commands
 USAGE                                                    *platformio-usage*
 
 
-                                                                 *:Pioinit*
+								    *:Pioinit*
 :Pioinit                 Open neovim in a fresh directory for the project and 
                          run `:Pioinit`, it will prompt a telescope picker
                          search and pick the board you want and press enter
@@ -22,7 +22,7 @@ USAGE                                                    *platformio-usage*
                          you want use with the board and select it.
                          the project is initialised.
 
-                                                                  *:Piorun*
+								    *:Piorun*
 :Piorun [arg]   	 This command is used to build and upload the code.
 			 Possible arguments: build, upload, clean
 			 Argument is optional, if no argument is given it 
@@ -33,7 +33,7 @@ USAGE                                                    *platformio-usage*
 			    `:Piorun upload`
 			    `:Piorun clean`
 
-								  *:Piocmd*
+								    *:Piocmd*
 :Piocmd [cmd]		 Using this command you can run pio commands, 
 			 usage example: `:Piocmd device list` . The cmd
 			 argument is optional, if you dont provide any argment
@@ -46,7 +46,7 @@ USAGE                                                    *platformio-usage*
 			    `:Piocmd device list`
 			    `:Piocmd boards arduinouno --json-output`
 
-								  *:Piolib*
+								    *:Piolib*
 :Piolib [libname]	 This command is used to install library. Run the
 			 with a keyword for search, it will open a telescope
 			 picker list of available library corresponding to the
@@ -56,7 +56,7 @@ USAGE                                                    *platformio-usage*
 			    `:Piolib arduino json`
 			    `:Piolib keyboard`
 
-								  *:Piomon*
+								    *:Piomon*
 :Piomon [baud_rate]	This command is used to open a serial monitor. You can
 			specify a baud rate as the argument but its optional.
 			If you dont provide any argument its going to take the
@@ -68,4 +68,3 @@ USAGE                                                    *platformio-usage*
 ==============================================================================
 
 vim:tw=78:sw=4:ts=8:ft=help:norl:noet:
-

@@ -70,7 +70,7 @@ function M.pioinit(board)
         return
     end
 
-    local json_data = require('lunajson').decode(json_str)
+    local json_data = vim.json.decode(json_str)
 
     for i,v in pairs(json_data) do
         board_data[v['name']] = v

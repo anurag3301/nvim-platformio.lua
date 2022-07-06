@@ -18,7 +18,7 @@ Install the plugin using packer
 ```lua
 use {
     'anurag3301/nvim-platformio.lua',
-    rocks = {'lunajson', 'luasec'},
+    rocks = {'luasec'},
     requires = {
         {'akinsho/nvim-toggleterm.lua'},
         {'nvim-telescope/telescope.nvim'},

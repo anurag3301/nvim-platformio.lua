@@ -54,7 +54,7 @@ function M.piolib(lib_arg_list)
             json_str = json_str .. v
         end
 
-        local json_data = require('lunajson').decode(json_str)
+        local json_data = vim.json.decode(json_str)
 
         for k,v in pairs(json_data['items']) do
             lib_data[v['name']] = v

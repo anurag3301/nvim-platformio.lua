@@ -2,7 +2,7 @@
 PlatformIO wrapper for neovim written in lua
 
 ## The plugin is under development
-
+### Please read the [Docs](https://github.com/anurag3301/nvim-platformio.lua/blob/main/doc/platformio.txt) to know about rest of commands.
 ### Installation
 Install PlatformIO using pip
 

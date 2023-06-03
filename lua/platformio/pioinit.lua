@@ -24,7 +24,7 @@ local function pick_framework()
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
             selected_board_framework = selection[1]
-            local command = "pio project init --board ".. selected_board_id .. " --project-option=\"framework=" .. selected_board_framework .. "\";" .. utils.extra
+            local command = "pio project init --board ".. selected_board_id .. " --project-option=\"framework=" .. selected_board_framework .. "\" --ide vim;" .. utils.extra
             local initterminal = Terminal:new({ cmd = command, direction = "float"})
             initterminal:toggle()
           end)

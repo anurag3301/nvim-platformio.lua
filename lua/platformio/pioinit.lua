@@ -6,6 +6,7 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local utils = require('platformio.utils')
+local Terminal  = require('toggleterm.terminal').Terminal
 
 local board_data = {}
 local board_names = {}
@@ -23,7 +24,9 @@ local function pick_framework()
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
             selected_board_framework = selection[1]
-            vim.cmd("2TermExec cmd='pio project init --board ".. selected_board_id .. " --project-option=\"framework=" .. selected_board_framework .. "\"; " .. utils.extra .. "' direction=float")
+            local command = "pio project init --board ".. selected_board_id .. " --project-option=\"framework=" .. selected_board_framework .. "\";" .. utils.extra
+            local initterminal = Terminal:new({ cmd = command, direction = "float"})
+            initterminal:toggle()
           end)
           return true
         end,

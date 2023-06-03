@@ -9,6 +9,7 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local utils = require('platformio.utils')
+local Terminal  = require('toggleterm.terminal').Terminal
 
 local function pick_library(args)
     local opts = {}
@@ -23,7 +24,9 @@ local function pick_library(args)
             local selection = action_state.get_selected_entry()
             selected_library = selection[1]
             local pkg_name = args['lib_data'][selected_library]['owner']['username'] .. "/" .. selected_library
-            vim.cmd("2TermExec cmd='pio pkg install --library \"".. pkg_name .. "\"; " .. utils.extra .. "' direction=float")
+            local command = "pio pkg install --library \"".. pkg_name .. "\"; " .. utils.extra
+            local term = Terminal:new({cmd = command, direction = "float"})
+            term:toggle()
           end)
           return true
         end,

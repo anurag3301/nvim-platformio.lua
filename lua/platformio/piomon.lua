@@ -1,4 +1,5 @@
 local utils = require('platformio.utils')
+local Terminal  = require('toggleterm.terminal').Terminal
 local M = {}
 
 function M.piomon(args_table)
@@ -7,10 +8,14 @@ function M.piomon(args_table)
     utils.cd_pioini()
 
     if(#args_table==0)then
-        vim.cmd(string.format("2TermExec cmd='pio device monitor; %s' direction=float", utils.extra))
+        local command = string.format("pio device monitor; %s", utils.extra)
+        local term = Terminal:new({cmd = command, direction = "float"})
+        term:toggle()
     else
         local baud_rate = args_table[1]
-        vim.cmd(string.format("2TermExec cmd='pio device monitor -b %s; %s ' direction=float", baud_rate, utils.extra))
+        local command = string.format("pio device monitor -b %s; %s", baud_rate, utils.extra)
+        local term = Terminal:new({cmd = command, direction = "float"})
+        term:toggle()
     end
 
 end

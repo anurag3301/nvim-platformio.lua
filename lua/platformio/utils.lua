@@ -1,6 +1,6 @@
 local M = {}
 
-M.extra = 'echo \"\\\\n\\\\033[0;33mPlease Press ENTER to continue \\\\033[0m\"; read; exit;'
+M.extra = 'printf \"\\\\n\\\\033[0;33mPlease Press ENTER to continue \\\\033[0m\"; read'
 
 function M.strsplit (inputstr)
     local t={}

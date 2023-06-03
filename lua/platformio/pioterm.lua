@@ -1,4 +1,5 @@
 local utils = require('platformio.utils')
+local Terminal  = require('toggleterm.terminal').Terminal
 local M = {}
 
 function M.piocmd(cmd_table)
@@ -13,7 +14,9 @@ function M.piocmd(cmd_table)
         for k,v in pairs(cmd_table)do
             cmd = cmd .. " " .. v
         end
-        vim.cmd("2TermExec cmd='pio " .. cmd .."; " .. utils.extra .. "' direction=float")
+        local command = "pio " .. cmd .."; " .. utils.extra
+        local term = Terminal:new({ cmd = command, direction = "float"})
+        term:toggle()
     end
 
 end

@@ -1,70 +1,62 @@
-*platformio.txt* Wrapper of PlatfromIO for neovim
+*platformio.lua* Wrapper of PlatformIO for Neovim
 
 Author:  Anurag Kumar Singh
 Repo:    https://github.com/anurag3301/nvim-platformio.lua
 License: MIT
 
+INTRODUCTION                                                   *PlatformIO*
 
-INTRODUCTION                                                   *PlatfromIO*
-
-A plugin for wrapping platformio command with user-friendly neovim commands
+A plugin for wrapping PlatformIO commands with user-friendly Neovim commands.
 
 ==============================================================================
 
 USAGE                                                    *platformio-usage*
 
+                                   *:Pioinit*
+:Pioinit                 Open Neovim in a fresh directory, run `:Pioinit`, and
+                         follow the prompt to initialize a project. A telescope
+                         picker will appear for selecting the board, and then
+                         another for choosing the framework. Press enter to
+                         complete the initialization.
 
-								    *:Pioinit*
-:Pioinit                 Open neovim in a fresh directory for the project and 
-                         run `:Pioinit`, it will prompt a telescope picker
-                         search and pick the board you want and press enter
-                         a new telescope picker will pop for the framework 
-                         you want use with the board and select it.
-                         the project is initialised.
+                                   *:Piorun*
+:Piorun [arg]            This command builds and uploads the code. Optional
+                         arguments: build, upload, clean. If no argument is
+                         provided, it defaults to build and upload.
+                         Examples:
+                            `:Piorun`
+                            `:Piorun build`
+                            `:Piorun upload`
+                            `:Piorun clean`
 
-								    *:Piorun*
-:Piorun [arg]   	 This command is used to build and upload the code.
-			 Possible arguments: build, upload, clean
-			 Argument is optional, if no argument is given it 
-			 will default to build and upload
-			 Examples:
-			    `:Piorun`
-			    `:Piorun build`
-			    `:Piorun upload`
-			    `:Piorun clean`
+                                   *:Piocmd*
+:Piocmd [cmd]           Run PlatformIO commands. Example: `:Piocmd device list`.
+                         The command argument is optional. If not provided, it
+                         opens a floating toggleterm in the project root where
+                         you can execute commands. Note: `pio` keyword is not
+                         required in the command.
+                         Examples:
+                            `:Piocmd`
+                            `:Piocmd run -e uno -t upload`
+                            `:Piocmd device list`
+                            `:Piocmd boards arduinouno --json-output`
 
-								    *:Piocmd*
-:Piocmd [cmd]		 Using this command you can run pio commands, 
-			 usage example: `:Piocmd device list` . The cmd
-			 argument is optional, if you dont provide any argment
-			 it will open a floating toggleterm in the project
-			 root directory where you can execute commands.
-			 Note: `pio` keyword is not requied int the command
-			 Examples:
-			    `:Piocmd`
-			    `:Piocmd run -e uno -t upload`
-			    `:Piocmd device list`
-			    `:Piocmd boards arduinouno --json-output`
+                                   *:Piolib*
+:Piolib [libname]       Install a library by providing a keyword for search. A
+                         telescope picker will show available libraries. Pick
+                         one and press enter to install.
+                         Examples:
+                            `:Piolib arduino json`
+                            `:Piolib keyboard`
 
-								    *:Piolib*
-:Piolib [libname]	 This command is used to install library. Run the
-			 with a keyword for search, it will open a telescope
-			 picker list of available library corresponding to the
-			 query, pick one and press enter, it will install that
-			 library.
-			 Examples:
-			    `:Piolib arduino json`
-			    `:Piolib keyboard`
+                                   *:Piomon*
+:Piomon [baud_rate]     Open a serial monitor. Specify a baud rate as an
+                         optional argument. If not provided, it uses the default
+                         baud rate (9600) or the one specified in platformio.ini.
+                         Examples:
+                            `:Piomon`
+                            `:Piomon 115200`
 
-								    *:Piomon*
-:Piomon [baud_rate]	This command is used to open a serial monitor. You can
-			specify a baud rate as the argument but its optional.
-			If you dont provide any argument its going to take the
-			default baud rate which is 9600, or the one specified
-			the in platformio.ini file.
-			Examples:
-			    `:Piomon`
-			    `:Piomon 115200`
 ==============================================================================
 
 vim:tw=78:sw=4:ts=8:ft=help:norl:noet:

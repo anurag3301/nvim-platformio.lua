@@ -5,26 +5,59 @@ local finders = require "telescope.finders"
 local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
+local entry_display = require "telescope.pickers.entry_display"
+local make_entry = require "telescope.make_entry"
 local utils = require('platformio.utils')
 local Terminal  = require('toggleterm.terminal').Terminal
 
-local board_data = {}
-local board_names = {}
-local selected_board_id, selected_board_name, selected_board_framework
 
-local function pick_framework()
+local boardentry_maker = function(opts)
+  local displayer = entry_display.create {
+    separator = "▏",
+    items = {
+      { width = 50 },
+      { width = 25 },
+      { width = 25 },
+    },
+  }
+
+  local make_display = function(entry)
+    return displayer {
+      entry.value.name,
+      entry.value.vendor,
+      entry.value.platform,
+    }
+  end
+
+  return function(entry)
+    return make_entry.set_default_entry_mt({
+      value = {
+        id = entry.id,
+        name = entry.name,
+        vendor = entry.vendor,
+        platform = entry.platform,
+        frameworks = entry.frameworks,
+      },
+      ordinal = entry.name .. " " .. entry.vendor .. " " .. entry.platform,
+      display = make_display,
+    }, opts)
+  end
+end
+
+
+local function pick_framework(board_details)
     local opts = {}
     pickers.new(opts, {
         prompt_title = "frameworks",
         finder = finders.new_table{
-            results = board_data[selected_board_name]['frameworks'],
+            results = board_details['frameworks'],
         },
         attach_mappings = function(prompt_bufnr, map)
           actions.select_default:replace(function()
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
             selected_board_framework = selection[1]
-            local command = "pio project init --board ".. selected_board_id .. " --project-option=\"framework=" .. selected_board_framework .. "\" --ide vim;" .. utils.extra
+            local command = "pio project init --board ".. board_details['id'] .. " --project-option=\"framework=" .. selected_board_framework .. "\" --ide vim;" .. utils.extra
             local initterminal = Terminal:new({ cmd = command, direction = "float"})
             initterminal:toggle()
           end)
@@ -34,26 +67,26 @@ local function pick_framework()
     }):find()
 end
 
-local function pick_board ()
+local function pick_board (json_data)
     local opts = {}
     pickers.new(opts, {
         prompt_title = "Boards",
         finder = finders.new_table{
-            results = board_names,
+            results = json_data,
+            entry_maker = opts.entry_maker or boardentry_maker(opts),
         },
         attach_mappings = function(prompt_bufnr, map)
           actions.select_default:replace(function()
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
-            selected_board_name = selection[1]
-            selected_board_id = board_data[selection[1]]['id']
-            pick_framework()
+            pick_framework(selection['value'])
           end)
           return true
         end,
         sorter = conf.generic_sorter(opts),
     }):find()
 end
+
 
 function M.pioinit(board)
     
@@ -74,12 +107,7 @@ function M.pioinit(board)
     end
 
     local json_data = vim.json.decode(json_str)
-
-    for i,v in pairs(json_data) do
-        board_data[v['name']] = v
-        table.insert(board_names, v['name'])
-    end
-    pick_board()
+    pick_board(json_data)
 end
 
 return M

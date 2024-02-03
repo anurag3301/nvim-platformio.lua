@@ -11,6 +11,7 @@ local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local utils = require('platformio.utils')
 local Terminal  = require('toggleterm.terminal').Terminal
+local previewers = require "telescope.previewers"
 
 local libentry_maker = function(opts)
   local displayer = entry_display.create {
@@ -36,6 +37,7 @@ local libentry_maker = function(opts)
         name = entry.name,
         owner = entry.owner.username,
         description = entry.description,
+        data = entry,
       },
       ordinal = entry.name .. " " .. entry.owner.username .. " " .. entry.description,
       display = make_display,
@@ -66,6 +68,14 @@ local function pick_library(json_data)
             end)
             return true
         end,
+
+        previewer = previewers.new_buffer_previewer {
+            title = "Package Info",
+            define_preview = function (self, entry, status)
+                local json = utils.strsplit(vim.inspect(entry['value']['data']), "\n")
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, json)
+            end
+        },
         sorter = conf.generic_sorter(opts),
     }):find()
 end

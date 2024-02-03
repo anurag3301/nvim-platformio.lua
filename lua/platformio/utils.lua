@@ -2,9 +2,9 @@ local M = {}
 
 M.extra = 'printf \"\\\\n\\\\033[0;33mPlease Press ENTER to continue \\\\033[0m\"; read'
 
-function M.strsplit (inputstr)
+function M.strsplit (inputstr, del)
     local t={}
-    for str in string.gmatch(inputstr, "([^%s]+)") do
+    for str in string.gmatch(inputstr, "([^".. del .."]+)") do
         table.insert(t, str)
     end
     return t

@@ -31,7 +31,7 @@ function M.piorun(arg)
         arg = 'upload'
     end
 
-    arg = utils.strsplit(arg)[1]
+    arg = utils.strsplit(arg, "%s")[1]
     if(arg == 'upload')then
         M.pioupload()
     elseif(arg == 'build')then

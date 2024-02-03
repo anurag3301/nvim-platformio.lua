@@ -9,6 +9,7 @@ local entry_display = require "telescope.pickers.entry_display"
 local make_entry = require "telescope.make_entry"
 local utils = require('platformio.utils')
 local Terminal  = require('toggleterm.terminal').Terminal
+local previewers = require "telescope.previewers"
 
 
 local boardentry_maker = function(opts)
@@ -36,7 +37,7 @@ local boardentry_maker = function(opts)
         name = entry.name,
         vendor = entry.vendor,
         platform = entry.platform,
-        frameworks = entry.frameworks,
+        data = entry,
       },
       ordinal = entry.name .. " " .. entry.vendor .. " " .. entry.platform,
       display = make_display,
@@ -79,10 +80,17 @@ local function pick_board (json_data)
           actions.select_default:replace(function()
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
-            pick_framework(selection['value'])
+            pick_framework(selection['value']['data'])
           end)
           return true
         end,
+        previewer = previewers.new_buffer_previewer {
+            title = "Board Info",
+            define_preview = function (self, entry, status)
+                local json = utils.strsplit(vim.inspect(entry['value']['data']), "\n")
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, json)
+            end
+        },
         sorter = conf.generic_sorter(opts),
     }):find()
 end

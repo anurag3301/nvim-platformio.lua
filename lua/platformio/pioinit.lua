@@ -16,9 +16,9 @@ local boardentry_maker = function(opts)
   local displayer = entry_display.create {
     separator = "▏",
     items = {
-      { width = 50 },
-      { width = 25 },
-      { width = 25 },
+      { width = 35 },
+      { width = 20 },
+      { width = 15 },
     },
   }
 

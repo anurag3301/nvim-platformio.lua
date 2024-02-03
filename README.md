@@ -41,7 +41,10 @@ Now you have the project configured
 
 
 
-https://user-images.githubusercontent.com/52702259/170633466-c8c31705-488b-4f41-99b3-cb89a4fb3c0b.mp4
+
+https://github.com/anurag3301/nvim-platformio.lua/assets/52702259/528a2bbf-5a0e-4fa8-87e8-026ce47eef9d
+
+
 
 
 

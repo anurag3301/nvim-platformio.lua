@@ -4,43 +4,43 @@ local utils = require('platformio.utils')
 local Terminal  = require('toggleterm.terminal').Terminal
 
 function M.piobuild()
-    utils.cd_pioini()
-    local command = "pio run; " .. utils.extra
-    local term = Terminal:new({ cmd = command, direction = "float"})
-    term:toggle()
+  utils.cd_pioini()
+  local command = "pio run; " .. utils.extra
+  local term = Terminal:new({ cmd = command, direction = "float"})
+  term:toggle()
 end
 
 function M.pioupload()
-    utils.cd_pioini()
-    local command = "pio run --target upload; " .. utils.extra
-    local term = Terminal:new({ cmd = command, direction = "float"})
-    term:toggle()
+  utils.cd_pioini()
+  local command = "pio run --target upload; " .. utils.extra
+  local term = Terminal:new({ cmd = command, direction = "float"})
+  term:toggle()
 end
 
 function M.pioclean()
-    utils.cd_pioini()
-    local command = "pio run --target clean; " .. utils.extra
-    local term = Terminal:new({ cmd = command, direction = "float"})
-    term:toggle()
+  utils.cd_pioini()
+  local command = "pio run --target clean; " .. utils.extra
+  local term = Terminal:new({ cmd = command, direction = "float"})
+  term:toggle()
 end
 
 function M.piorun(arg)
-    if not utils.pio_install_check() then return end
+  if not utils.pio_install_check() then return end
 
-    if(arg == nil)then
-        arg = 'upload'
-    end
+  if(arg == nil)then
+    arg = 'upload'
+  end
 
-    arg = utils.strsplit(arg, "%s")[1]
-    if(arg == 'upload')then
-        M.pioupload()
-    elseif(arg == 'build')then
-        M.piobuild()
-    elseif(arg == 'clean')then
-        M.pioclean()
-    else
-        vim.notify("Invalid argument: build, upload or clean", vim.log.levels.WARN)
-    end
+  arg = utils.strsplit(arg, "%s")[1]
+  if(arg == 'upload')then
+    M.pioupload()
+  elseif(arg == 'build')then
+    M.piobuild()
+  elseif(arg == 'clean')then
+    M.pioclean()
+  else
+    vim.notify("Invalid argument: build, upload or clean", vim.log.levels.WARN)
+  end
 
 end
 

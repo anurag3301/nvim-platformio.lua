@@ -47,75 +47,76 @@ end
 
 
 local function pick_framework(board_details)
-    local opts = {}
-    pickers.new(opts, {
-        prompt_title = "frameworks",
-        finder = finders.new_table{
-            results = board_details['frameworks'],
-        },
-        attach_mappings = function(prompt_bufnr, map)
-          actions.select_default:replace(function()
-            actions.close(prompt_bufnr)
-            local selection = action_state.get_selected_entry()
-            selected_board_framework = selection[1]
-            local command = "pio project init --board ".. board_details['id'] .. " --project-option=\"framework=" .. selected_board_framework .. "\" --ide vim;" .. utils.extra
-            local initterminal = Terminal:new({ cmd = command, direction = "float"})
-            initterminal:toggle()
-          end)
-          return true
-        end,
-        sorter = conf.generic_sorter(opts),
-    }):find()
+  local opts = {}
+  pickers.new(opts, {
+    prompt_title = "frameworks",
+    finder = finders.new_table{
+        results = board_details['frameworks'],
+    },
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        local selected_framework = selection[1]
+        local command = "pio project init --board ".. board_details['id'] .. " --project-option=\"framework=" .. selected_framework .. "\" --ide vim;" .. utils.extra
+        local initterminal = Terminal:new({ cmd = command, direction = "float"})
+        initterminal:toggle()
+      end)
+      return true
+    end,
+    sorter = conf.generic_sorter(opts),
+  }):find()
 end
 
 local function pick_board (json_data)
-    local opts = {}
-    pickers.new(opts, {
-        prompt_title = "Boards",
-        finder = finders.new_table{
-            results = json_data,
-            entry_maker = opts.entry_maker or boardentry_maker(opts),
-        },
-        attach_mappings = function(prompt_bufnr, map)
-          actions.select_default:replace(function()
-            actions.close(prompt_bufnr)
-            local selection = action_state.get_selected_entry()
-            pick_framework(selection['value']['data'])
-          end)
-          return true
-        end,
-        previewer = previewers.new_buffer_previewer {
-            title = "Board Info",
-            define_preview = function (self, entry, status)
-                local json = utils.strsplit(vim.inspect(entry['value']['data']), "\n")
-                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, json)
-            end
-        },
-        sorter = conf.generic_sorter(opts),
-    }):find()
+  local opts = {}
+  pickers.new(opts, {
+    prompt_title = "Boards",
+    finder = finders.new_table{
+      results = json_data,
+      entry_maker = opts.entry_maker or boardentry_maker(opts),
+    },
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        pick_framework(selection['value']['data'])
+      end)
+      return true
+    end,
+    previewer = previewers.new_buffer_previewer {
+      title = "Board Info",
+      define_preview = function (self, entry, status)
+        local json = utils.strsplit(vim.inspect(entry['value']['data']), "\n")
+        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, json)
+      end
+    },
+    sorter = conf.generic_sorter(opts),
+  }):find()
 end
 
 
-function M.pioinit(board)
-    
-    if not utils.pio_install_check() then return end
+function M.pioinit()
+  if not utils.pio_install_check() then return end
 
-    local command = 'pio boards --json-output'
-    local handel = io.popen(command .. ' 2>/dev/null')
-    local json_str = handel:read("*a")
+  -- Read stdout
+  local command = 'pio boards --json-output'
+  local handel = io.popen(command .. ' 2>/dev/null')
+  local json_str = handel:read("*a")
+  handel:close()
+
+  if #json_str == 0 then
+    -- read stderr
+    local handel = io.popen(command .. ' 2>&1')
+    local command_output = handel:read("*a")
     handel:close()
+    vim.notify("Some error occured while executing `" ..command.. "`', command output: \n", vim.log.levels.WARN)
+    print(command_output)
+    return
+  end
 
-    if #json_str == 0 then
-        local handel = io.popen(command .. ' 2>&1')
-        local command_output = handel:read("*a")
-        handel:close()
-        vim.notify("Some error occured while executing `" ..command.. "`', command output: \n", vim.log.levels.WARN)
-        print(command_output)
-        return
-    end
-
-    local json_data = vim.json.decode(json_str)
-    pick_board(json_data)
+  local json_data = vim.json.decode(json_str)
+  pick_board(json_data)
 end
 
 return M

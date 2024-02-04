@@ -5,7 +5,8 @@ PlatformIO wrapper for neovim written in lua.
 Install PlatformIO using pip
 
 ```sh
-python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
+curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
+python3 get-platformio.py
 
 # Check if you have a working Installation of PlatformIO
 pio --version

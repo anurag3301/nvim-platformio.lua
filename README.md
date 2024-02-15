@@ -27,7 +27,7 @@ use {
 }
 ```
 
-Install the plugin using lazy
+Or install the plugin using lazy
 
 ```lua
 return {

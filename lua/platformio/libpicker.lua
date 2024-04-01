@@ -5,6 +5,7 @@ local finders = require "telescope.finders"
 local make_entry = require "telescope.make_entry"
 local pickers = require "telescope.pickers"
 local entry_display = require "telescope.pickers.entry_display"
+local previewers = require "telescope.previewers"
 
 local conf = require("telescope.config").values
 
@@ -23,8 +24,8 @@ local libentry_maker = function(opts)
   local displayer = entry_display.create {
     separator = "▏",
     items = {
-      { width = 14 },
-      { width = 18 },
+      { width = 20 },
+      { width = 20 },
       { remaining = true },
     },
   }
@@ -32,7 +33,7 @@ local libentry_maker = function(opts)
   local make_display = function(entry)
     return displayer {
       { entry.value.name, "vimAutoEvent" },
-      { entry.value.owner, "vimAugroup" },
+      entry.value.owner,
       entry.value.command,
     }
   end
@@ -43,6 +44,7 @@ local libentry_maker = function(opts)
         name = entry.name,
         owner = entry.owner.username,
         command = entry.description,
+        data = entry
       },
       --
       ordinal = entry.name .. " " .. entry.owner.username .. " " .. entry.description,
@@ -50,6 +52,15 @@ local libentry_maker = function(opts)
     }, opts)
   end
 end
+
+function strsplit (inputstr, del)
+    local t={}
+    for str in string.gmatch(inputstr, "([^".. del .."]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
 
 -- our picker function: colors
 local colors = function(opts)
@@ -64,9 +75,28 @@ local colors = function(opts)
         entry_maker = opts.entry_maker or libentry_maker(opts),
       },
       -- previewer = previewers.autocommands.new(opts),
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            local pkg_name = selection['value']['owner'] .. "/" .. selection['value']['name']
+            local command = "pio pkg install --library \"".. pkg_name .. "\"; "
+            print(command)
+          end)
+          return true
+        end,
+    previewer = previewers.new_buffer_previewer {
+      title = "My preview",
+      define_preview = function (self, entry, status)
+        local json = strsplit(vim.inspect(entry['value']['data']), "%s")
+        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, json)
+      end
+    },
+
       sorter = conf.generic_sorter(opts),
     })
     :find()
 end
 -- to execute the function
 colors({})
+

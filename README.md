@@ -55,6 +55,7 @@ cmd = {
     "Piocmd",
     "Piolib",
     "Piomon",
+    "Piodebug",
 },
 ```
 

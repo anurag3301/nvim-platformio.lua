@@ -57,6 +57,8 @@ USAGE                                                    *platformio-usage*
                             `:Piomon`
                             `:Piomon 115200`
 
+                                   *:Piodebug*
+:Pidebug		 Starts the default PlatformIO debugger with gdb
 ==============================================================================
 
 vim:tw=78:sw=4:ts=8:ft=help:norl:noet:

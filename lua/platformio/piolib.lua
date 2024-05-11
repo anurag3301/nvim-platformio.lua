@@ -48,7 +48,7 @@ end
 local function pick_library(json_data)
   local opts = {}
   table.sort(json_data['items'], function(lhs, rhs)
-    return lhs.popularity_rank < rhs.popularity_rank
+    return lhs.popularity_rank > rhs.popularity_rank
   end)
   pickers.new(opts, {
     prompt_title = "Libraries",

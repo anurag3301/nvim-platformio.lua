@@ -1,23 +1,22 @@
-local utils = require('platformio.utils')
-local Terminal  = require('toggleterm.terminal').Terminal
+local utils = require("platformio.utils")
 local M = {}
 
 function M.piomon(args_table)
-  if not utils.pio_install_check() then return end
+  if not utils.pio_install_check() then
+    return
+  end
 
   utils.cd_pioini()
 
-  if(#args_table==0)then
-    local command = string.format("pio device monitor; %s", utils.extra)
-    local term = Terminal:new({cmd = command, direction = "float"})
-    term:toggle()
+  local command
+  local extra = "echo Press [Ctrl+C] then press ENTER to exit &&"
+  if #args_table == 0 then
+    command = string.format("%s pio device monitor", extra)
   else
     local baud_rate = args_table[1]
-    local command = string.format("pio device monitor -b %s; %s", baud_rate, utils.extra)
-    local term = Terminal:new({cmd = command, direction = "float"})
-    term:toggle()
+    command = string.format("%s pio device monitor -b %s", extra, baud_rate)
   end
-
+  utils.ToggleTerminal(command, "horizontal")
 end
 
 return M

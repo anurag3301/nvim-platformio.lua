@@ -85,10 +85,10 @@ function M.piolib(lib_arg_list)
   local lib_str = ""
 
   for k,v in pairs(lib_arg_list) do
-    lib_str = lib_str .. v
+    lib_str = lib_str .. v .. "+"
   end
 
-  local url = 'https://api.registry.platformio.org/v3/search?query="' .. lib_str .. '"&page=1&limit=50'
+  local url = 'https://api.registry.platformio.org/v3/search?query=' .. lib_str
 
   local res = curl.get(url, {accept = "application/json"})
 

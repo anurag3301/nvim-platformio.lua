@@ -92,7 +92,13 @@ local function pick_board(json_data)
           title = "Board Info",
           define_preview = function(self, entry, _)
             local json = utils.strsplit(vim.inspect(entry["value"]["data"]), "\n")
-            vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, json)
+            local bufnr = self.state.bufnr
+            vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, json)
+            vim.defer_fn(function()
+              vim.api.nvim_buf_set_option(bufnr, 'wrap', true)
+              vim.api.nvim_buf_set_option(bufnr, 'linebreak', true)
+              vim.api.nvim_buf_set_option(bufnr, 'wrapmargin', 2)
+            end, 0)
           end,
         }),
         sorter = conf.generic_sorter(opts),

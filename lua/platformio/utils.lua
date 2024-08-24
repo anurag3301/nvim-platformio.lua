@@ -15,13 +15,16 @@ local function pathmul(n)
   return ".." .. string.rep("/..", n)
 end
 ----------------------------------------------------------------------------------------
-function M.ToggleTerminal(command, direction)
+function M.ToggleTerminal(command, direction, title)
   local Terminal = require("toggleterm.terminal").Terminal
   local terminal = Terminal:new({
     cmd = command,
     direction = direction,
     close_on_exit = false,
     on_create = function(t)
+      if title then
+        t.display_name = title
+      end
       local platformio = vim.api.nvim_create_augroup("platformio", { clear = true })
       vim.api.nvim_create_autocmd({ "QuitPre" }, {
         group = platformio, --fmt_group,

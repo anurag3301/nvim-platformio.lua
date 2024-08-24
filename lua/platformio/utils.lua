@@ -20,11 +20,13 @@ function M.ToggleTerminal(command, direction, title)
   local terminal = Terminal:new({
     cmd = command,
     direction = direction,
-    close_on_exit = false,
     on_create = function(t)
       if title then
-        t.display_name = title
+        vim.api.nvim_set_hl(0, "MyWinBar", { bg = "#e4f00e", fg = "#0012d9" })
+        local value = "%#MyWinBar#" .. title .. "%*"
+        vim.api.nvim_set_option_value("winbar", value, { scope = "local", win = t.window })
       end
+
       local platformio = vim.api.nvim_create_augroup("platformio", { clear = true })
       vim.api.nvim_create_autocmd({ "QuitPre" }, {
         group = platformio, --fmt_group,

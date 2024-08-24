@@ -11,6 +11,16 @@ PlatformIO wrapper for Neovim written in Lua.</p>
 
 https://github.com/anurag3301/nvim-platformio.lua/assets/52702259/528a2bbf-5a0e-4fa8-87e8-026ce47eef9d
 
+<br>
+
+Try the plugin with this minimal standalone config without making any changes to your current plugin. **Very useful if you facing error while installation or using**
+```sh
+wget https://raw.githubusercontent.com/anurag3301/nvim-platformio.lua/main/minimal_config.lua
+nvim -u minimal_config.lua
+
+# Now run :Pioinit
+```
+
 ## Installation
 
 #### PlatformIO Core

@@ -21,6 +21,19 @@ function M.ToggleTerminal(command, direction)
     cmd = command,
     direction = direction,
     close_on_exit = false,
+    on_create = function(t)
+      local platformio = vim.api.nvim_create_augroup("platformio", { clear = true })
+      vim.api.nvim_create_autocmd({ "QuitPre" }, {
+        group = platformio, --fmt_group,
+        desc = "close terminl",
+        callback = function()
+          local wbuf = vim.api.nvim_win_get_buf(0)
+          if wbuf == t.bufnr then
+            vim.api.nvim_buf_delete(wbuf, { force = true })
+          end
+        end,
+      })
+    end,
   })
   terminal:toggle()
 end

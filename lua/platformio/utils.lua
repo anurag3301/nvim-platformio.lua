@@ -20,6 +20,7 @@ function M.ToggleTerminal(command, direction, title)
   local terminal = Terminal:new({
     cmd = command,
     direction = direction,
+    close_on_exit = false,
     on_create = function(t)
       if title then
         vim.api.nvim_set_hl(0, "MyWinBar", { bg = "#e4f00e", fg = "#0012d9" })

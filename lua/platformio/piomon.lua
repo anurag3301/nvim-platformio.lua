@@ -9,14 +9,13 @@ function M.piomon(args_table)
   utils.cd_pioini()
 
   local command
-  local extra = "echo Press [Ctrl+C] then press ENTER to exit &&"
   if #args_table == 0 then
-    command = string.format("%s pio device monitor", extra)
+    command = "pio device monitor"
   else
     local baud_rate = args_table[1]
-    command = string.format("%s pio device monitor -b %s", extra, baud_rate)
+    command = string.format("pio device monitor -b %s", baud_rate)
   end
-  utils.ToggleTerminal(command, "horizontal")
+  utils.ToggleTerminal(command, "horizontal", "Press [Ctrl+C] then press ENTER to exit")
 end
 
 return M

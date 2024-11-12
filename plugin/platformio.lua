@@ -29,7 +29,7 @@ end, {
 
 -- Piomon
 vim.api.nvim_create_user_command("Piomon", function(opts)
-	local args = opts.args
+	local args = opts.args -- the piomon function will take care of argument error
 	if args == 0 then
 		require("platformio.piomon").piomon(0)
 	else
@@ -38,6 +38,14 @@ vim.api.nvim_create_user_command("Piomon", function(opts)
 end, {})
 
 -- Piolib
-vim.api.nvim_create_user_command("Piolib", function()
-	require("platformio.piolib").piolib()
-end, {})
+vim.api.nvim_create_user_command("Piolib", function(opts)
+	-- Split the args into a table
+	local args = vim.split(opts.args, " ")
+
+	-- Call the piolib function with the arguments
+	require("platformio.piolib").piolib(args)
+end, {
+	nargs = "+", -- means can take another argument
+})
+
+-- TODO:: implement Piodebug and Pioterm

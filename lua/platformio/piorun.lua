@@ -26,26 +26,23 @@ function M.pioclean()
   utils.ToggleTerminal(command, 'float')
 end
 
-function M.piorun(arg)
+function M.piorun(arg_table)
   if not utils.pio_install_check() then
     return
   end
 
-  if arg == nil then
-    arg = 'upload'
-  end
-
-  arg = utils.strsplit(arg, '%s')[1]
-  if arg == 'upload' then
+  if #arg_table == 0 then
     M.pioupload()
-  elseif arg == 'uploadfs' then
+  elseif arg_table[1] == 'upload' then
+    M.pioupload()
+  elseif arg_table[1] == 'uploadfs' then
     M.piouploadfs()
-  elseif arg == 'build' then
+  elseif arg_table[1] == 'build' then
     M.piobuild()
-  elseif arg == 'clean' then
+  elseif arg_table[1] == 'clean' then
     M.pioclean()
   else
-    vim.notify('Invalid argument: build, upload or clean', vim.log.levels.WARN)
+    vim.notify('Invalid argument: build, upload, uploadfs or clean', vim.log.levels.WARN)
   end
 end
 

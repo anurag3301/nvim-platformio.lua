@@ -11,21 +11,30 @@ end, {})
 -- Piorun
 vim.api.nvim_create_user_command('Piorun', function(opts)
   local args = opts.args
-  if args == 'upload' then -- checking valid commands
-    require('platformio.piorun').pioupload()
-  elseif args == 'uploadfs' then
-    require('platformio.piorun').piouploadfs()
-  elseif args == 'build' then
-    require('platformio.piorun').piobuild()
-  elseif args == 'clean' then
-    require('platformio.piorun').pioclean()
+  -- if args == 'upload' then -- checking valid commands
+  --   require('platformio.piorun').pioupload()
+  -- elseif args == '' then
+  --   require('platformio.piorun').pioupload()
+  -- elseif args == 'uploadfs' then
+  --   require('platformio.piorun').piouploadfs()
+  -- elseif args == 'build' then
+  --   require('platformio.piorun').piobuild()
+  -- elseif args == 'clean' then
+  --   require('platformio.piorun').pioclean()
+  -- else
+  --   vim.api.nvim_err_writeln "Invalid argument. Use 'upload', 'uploadfs', 'build', or 'clean'." -- error message if the cmd is invalid
+  -- end
+  if args == '' then
+    -- No argument provided, run without args
+    require('platformio.piorun').piorun {}
   else
-    vim.api.nvim_err_writeln "Invalid argument. Use 'upload', 'build', or 'clean'." -- error message if the cmd is invalid
+    -- One argument provided, pass it as a table
+    require('platformio.piorun').piorun { args }
   end
 end, {
-  nargs = 1, -- Only one argument is expected
+  nargs = '?', -- Allow zero or one argument
   complete = function(_, _, _)
-    return { 'upload', 'build', 'clean' } -- Autocompletion options
+    return { 'upload', 'uploadfs', 'build', 'clean' } -- Autocompletion options
   end,
 })
 

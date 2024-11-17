@@ -29,13 +29,20 @@ end, {
 
 -- Piomon
 vim.api.nvim_create_user_command("Piomon", function(opts)
-	local args = opts.args -- the piomon function will take care of argument error
-	if args == 0 then
-		require("platformio.piomon").piomon(0)
+	local args = opts.args
+	if args == "" then
+		-- No argument provided, run without args
+		require("platformio.piomon").piomon({})
 	else
-		require("platformio.piomon").piomon(args)
+		-- One argument provided, pass it as a table
+		require("platformio.piomon").piomon({ args })
 	end
-end, {})
+end, {
+	nargs = "?", -- Allow zero or one argument
+	complete = function(_, _, _)
+		return { "4800", "9600", "57600", "115200" }
+	end,
+})
 
 -- Piolib
 vim.api.nvim_create_user_command("Piolib", function(opts)

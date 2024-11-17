@@ -17,8 +17,10 @@ vim.api.nvim_create_user_command("Piorun", function(opts)
 		require("platformio.piorun").piobuild()
 	elseif args == "clean" then
 		require("platformio.piorun").pioclean()
+	elseif args == "uploadfs" then
+		require("platformio.piorun").piouploadfs()
 	else
-		vim.api.nvim_err_writeln("Invalid argument. Use 'upload', 'build', or 'clean'.") -- error message if the cmd is invalid
+		vim.api.nvim_err_writeln("Invalid argument. Use 'upload', 'uploadfs', 'build', or 'clean'.") -- error message if the cmd is invalid
 	end
 end, {
 	nargs = 1, -- Only one argument is expected
@@ -28,14 +30,20 @@ end, {
 })
 
 -- Piomon
+-- https://docs.arduino.cc/learn/communication/uart/ as a base
 vim.api.nvim_create_user_command("Piomon", function(opts)
 	local args = opts.args -- the piomon function will take care of argument error
-	if args == 0 then
-		require("platformio.piomon").piomon(0)
-	else
+	if args ~= 0 then
 		require("platformio.piomon").piomon(args)
+	else
+		vim.api.nvim_err_writeln("Invalid argument or missing argument. Use 'baud rate', example: `:Piomon 115200`")
 	end
-end, {})
+end, {
+	nargs = 1,
+	complete = function(_, _, _)
+		return { 4800, 9600, 57600, 115200 }
+	end,
+})
 
 -- Piolib
 vim.api.nvim_create_user_command("Piolib", function(opts)

@@ -1,3 +1,12 @@
+-- Vim nargs options
+-- 0: No arguments.
+-- 1: Exactly one argument.
+-- ?: Zero or one argument.
+-- *: Any number of arguments (including none).
+-- +: At least one argument.
+-- -1: Zero or one argument (like ?, explicitly).
+
+
 -- Pioinit
 vim.api.nvim_create_user_command('Pioinit', function()
   require('platformio.pioinit').pioinit()

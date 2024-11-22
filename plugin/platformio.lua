@@ -43,7 +43,7 @@ vim.api.nvim_create_user_command('Piocmd', function(opts)
   local cmd_table = vim.split(opts.args, ' ')
   require('platformio.piocmd').piocmd(cmd_table)
 end, {
-  nargs = '+',
+  nargs = '*',
 })
 
 -- Piodebug

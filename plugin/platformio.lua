@@ -11,11 +11,7 @@ end, {})
 -- Piorun
 vim.api.nvim_create_user_command('Piorun', function(opts)
   local args = opts.args
-  if args == '' then
-    require('platformio.piorun').piorun {}
-  else
-    require('platformio.piorun').piorun { args }
-  end
+  require('platformio.piorun').piorun { args }
 end, {
   nargs = '?',
   complete = function(_, _, _)
@@ -26,11 +22,7 @@ end, {
 -- Piomon
 vim.api.nvim_create_user_command('Piomon', function(opts)
   local args = opts.args
-  if args == '' then
-    require('platformio.piomon').piomon {}
-  else
-    require('platformio.piomon').piomon { args }
-  end
+  require('platformio.piomon').piomon { args }
 end, {
   nargs = '?',
   complete = function(_, _, _)

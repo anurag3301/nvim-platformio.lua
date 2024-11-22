@@ -30,8 +30,7 @@ function M.piorun(arg_table)
   if not utils.pio_install_check() then
     return
   end
-
-  if #arg_table == 0 then
+  if arg_table[1] == '' then
     M.pioupload()
   elseif arg_table[1] == 'upload' then
     M.pioupload()

@@ -9,7 +9,7 @@ function M.piomon(args_table)
   utils.cd_pioini()
 
   local command
-  if #args_table == 0 then
+  if args_table[1] == '' then
     command = "pio device monitor"
   else
     local baud_rate = args_table[1]

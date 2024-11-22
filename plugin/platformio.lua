@@ -79,5 +79,5 @@ end, {
 
 -- Piodebug
 vim.api.nvim_create_user_command('Piodebug', function()
-  require('platformio.piodb').piodb()
+  require('platformio.piodebug').piodebug()
 end, {})

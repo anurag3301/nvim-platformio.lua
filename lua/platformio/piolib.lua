@@ -72,9 +72,10 @@ local function pick_library(json_data)
         define_preview = function(self, entry, _)
           local json = utils.strsplit(vim.inspect(entry['value']['data']), '\n')
           local bufnr = self.state.bufnr
-          local win = self.state.winid
           vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, json)
+          vim.api.nvim_buf_set_option(bufnr, 'filetype', 'lua')
           vim.defer_fn(function()
+            local win = self.state.winid
             vim.api.nvim_set_option_value('wrap', true, { scope = 'local', win = win })
             vim.api.nvim_set_option_value('linebreak', true, { scope = 'local', win = win })
             vim.api.nvim_set_option_value('wrapmargin', 2, { buf = bufnr })

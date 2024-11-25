@@ -71,5 +71,4 @@ cmd = {
 
 
 ### TODO
-- Syntax Highlighted Json Preview
 - Connect Piodebug with DAP

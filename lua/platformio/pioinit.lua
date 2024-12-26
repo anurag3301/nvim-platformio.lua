@@ -2,13 +2,14 @@ local M = {}
 
 local pickers = require 'telescope.pickers'
 local finders = require 'telescope.finders'
-local conf = require('telescope.config').values
+local telescope_conf = require('telescope.config').values
 local actions = require 'telescope.actions'
 local action_state = require 'telescope.actions.state'
 local entry_display = require 'telescope.pickers.entry_display'
 local make_entry = require 'telescope.make_entry'
 local utils = require 'platformio.utils'
 local previewers = require 'telescope.previewers'
+local config = require('platformio').config
 
 local boardentry_maker = function(opts)
   local displayer = entry_display.create {
@@ -61,12 +62,13 @@ local function pick_framework(board_details)
             .. ' --project-option "framework='
             .. selected_framework
             .. '"'
+            .. (config.lsp == "clangd" and " && pio run -t compiledb " or "")
             .. utils.extra
           utils.ToggleTerminal(command, 'float')
         end)
         return true
       end,
-      sorter = conf.generic_sorter(opts),
+      sorter = telescope_conf.generic_sorter(opts),
     })
     :find()
 end
@@ -103,7 +105,7 @@ local function pick_board(json_data)
           end, 0)
         end,
       },
-      sorter = conf.generic_sorter(opts),
+      sorter = telescope_conf.generic_sorter(opts),
     })
     :find()
 end

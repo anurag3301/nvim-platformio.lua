@@ -5,7 +5,7 @@
 -- *: Any number of arguments (including none).
 -- +: At least one argument.
 -- -1: Zero or one argument (like ?, explicitly).
-
+local platformio = require('platformio')
 
 -- Pioinit
 vim.api.nvim_create_user_command('Pioinit', function()

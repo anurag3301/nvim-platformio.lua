@@ -46,9 +46,6 @@ end
 
 local function pick_library(json_data)
   local opts = {}
-  table.sort(json_data['items'], function(lhs, rhs)
-    return lhs.popularity_rank > rhs.popularity_rank
-  end)
   pickers
     .new(opts, {
       prompt_title = 'Libraries',
@@ -105,6 +102,8 @@ function M.piolib(lib_arg_list)
     headers = { content_type = 'application/json' },
     query = {
       query = lib_str,
+      limit = 30,
+      sort = 'popularity',
       -- page = 1,
       -- limit = 1,
     },

@@ -1,5 +1,6 @@
 local M = {}
 
+local config = require('platformio').config
 local curl = require 'plenary.curl'
 
 local pickers = require 'telescope.pickers'
@@ -58,7 +59,8 @@ local function pick_library(json_data)
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           local pkg_name = selection['value']['owner'] .. '/' .. selection['value']['name']
-          local command = 'pio pkg install --library "' .. pkg_name .. '"' .. utils.extra
+          -- Run compiledb targets after installing library to environments declared in “platformio.ini”
+          local command = 'pio pkg install --library "' .. pkg_name .. '"' .. (config.lsp == 'clangd' and ' && pio run -t compiledb ' or '') .. utils.extra
           utils.ToggleTerminal(command, 'float')
         end)
         return true
@@ -70,7 +72,7 @@ local function pick_library(json_data)
           local json = utils.strsplit(vim.inspect(entry['value']['data']), '\n')
           local bufnr = self.state.bufnr
           vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, json)
-          vim.api.nvim_buf_set_option(bufnr, 'filetype', 'lua')
+          vim.api.nvim_set_option_value('filetype', 'lua', { buf = bufnr }) --fix deprecated function
           vim.defer_fn(function()
             local win = self.state.winid
             vim.api.nvim_set_option_value('wrap', true, { scope = 'local', win = win })

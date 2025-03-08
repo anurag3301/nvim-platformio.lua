@@ -62,7 +62,7 @@ local function pick_framework(board_details)
             .. ' --project-option "framework='
             .. selected_framework
             .. '"'
-            .. (config.lsp == "clangd" and " && pio run -t compiledb " or "")
+            .. (config.lsp == 'clangd' and ' && pio run -t compiledb ' or '')
             .. utils.extra
           utils.ToggleTerminal(command, 'float')
         end)
@@ -96,7 +96,7 @@ local function pick_board(json_data)
           local json = utils.strsplit(vim.inspect(entry['value']['data']), '\n')
           local bufnr = self.state.bufnr
           vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, json)
-          vim.api.nvim_buf_set_option(bufnr, 'filetype', 'lua')
+          vim.api.nvim_set_option_value('filetype', 'lua', { buf = bufnr }) --fix deprecated function
           vim.defer_fn(function()
             local win = self.state.winid
             vim.api.nvim_set_option_value('wrap', true, { scope = 'local', win = win })

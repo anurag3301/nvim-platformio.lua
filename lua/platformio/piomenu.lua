@@ -1,3 +1,4 @@
+local entries = require("platformio.piomenu_entries")
 
 local M = {}
 

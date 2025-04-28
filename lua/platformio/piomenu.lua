@@ -19,17 +19,20 @@ function render_menu_entries()
     return lines
 end
 
+
 local function setup_mouse_click_handler(buf, win)
   vim.on_key(function(key)
     if key == vim.api.nvim_replace_termcodes('<LeftMouse>', true, true, true) then
-      -- Mouse clicked
-      local pos = vim.api.nvim_win_get_cursor(win)
-      local row = pos[1]
-      local col = pos[2]
-      local line = vim.api.nvim_buf_get_lines(buf, row - 1, row, false)[1] or ""
+      -- Defer cursor read AFTER mouse click is processed
+      vim.defer_fn(function()
+        local pos = vim.api.nvim_win_get_cursor(win)
+        local row = pos[1]
+        local col = pos[2]
+        local line = vim.api.nvim_buf_get_lines(buf, row - 1, row, false)[1] or ""
 
-      vim.api.nvim_buf_set_lines(buf, 0, -1, false, render_menu_entries())
-      print(string.format("Mouse click: row=%d col=%d char='%s'", row, col, line:sub(col + 1, col + 1)))
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, render_menu_entries())
+        print(string.format("Mouse click: row=%d col=%d char='%s'", row, col, line:sub(col + 1, col + 1)))
+      end, 0) -- 0ms delay is enough to yield to next event
     end
   end, vim.api.nvim_create_namespace('mouse_click_ns'))
 end

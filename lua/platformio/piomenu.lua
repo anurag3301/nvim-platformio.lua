@@ -2,6 +2,23 @@ local entries = require("platformio.piomenu_entries")
 
 local M = {}
 
+
+function render_menu_entries()
+    local lines = {}
+    for _, section in ipairs(entries) do
+        local line = (section.is_open and " " or " ") .. section.title
+        table.insert(lines, line)
+
+        if section.is_open then
+            for _, item in ipairs(section.entries) do
+                local subline = "\t" .. item.title
+                table.insert(lines, subline)
+            end
+        end
+    end
+    return lines
+end
+
 local function setup_mouse_click_handler(buf, win)
   vim.on_key(function(key)
     if key == vim.api.nvim_replace_termcodes('<LeftMouse>', true, true, true) then
@@ -11,11 +28,7 @@ local function setup_mouse_click_handler(buf, win)
       local col = pos[2]
       local line = vim.api.nvim_buf_get_lines(buf, row - 1, row, false)[1] or ""
 
-        vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
-          "Hello World",
-          "This is line 2",
-          "Another line"
-        })
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, render_menu_entries())
       print(string.format("Mouse click: row=%d col=%d char='%s'", row, col, line:sub(col + 1, col + 1)))
     end
   end, vim.api.nvim_create_namespace('mouse_click_ns'))

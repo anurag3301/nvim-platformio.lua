@@ -1,5 +1,5 @@
 local entries = require("platformio.piomenu_entries")
-local Job = require("plenary.job")  -- use plenary for async shell jobs easily
+local Job = require("plenary.job")
 
 local M = {}
 
@@ -14,7 +14,7 @@ function render_menu_entries()
 
     if section.is_open then
       for _, item in ipairs(section.entries) do
-        local subline = "\t" .. item.title
+        local subline = "      " .. item.title
         table.insert(lines, subline)
       end
     end
@@ -28,7 +28,6 @@ local function find_clicked_entry(row)
   for _, section in ipairs(entries) do
     current_line = current_line + 1
     if row == current_line then
-      -- Clicked on section title, not command
       return { type = "section", section = section }
     end
 
@@ -82,7 +81,6 @@ local function setup_mouse_click_handler()
           return
         end
 
-        -- Now safe to handle click inside left_win
         local pos = vim.api.nvim_win_get_cursor(left_win)
         local row = pos[1]
         local entry = find_clicked_entry(row)
@@ -100,10 +98,10 @@ local function setup_mouse_click_handler()
   end, vim.api.nvim_create_namespace('mouse_click_ns'))
 end
 
-function M.open_floating_window()
+function M.piomenu()
   -- Calculate sizes
-  local main_width = math.floor(vim.o.columns * 0.8)
-  local main_height = math.floor(vim.o.lines * 0.8)
+  local main_width = math.floor(vim.o.columns * 0.9)
+  local main_height = math.floor(vim.o.lines * 0.9)
   local main_row = math.floor((vim.o.lines - main_height) / 2)
   local main_col = math.floor((vim.o.columns - main_width) / 2)
 
@@ -118,7 +116,7 @@ function M.open_floating_window()
   vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, render_menu_entries())
   vim.api.nvim_buf_set_lines(right_buf, 0, -1, false, { "Output will appear here..." })
 
-  local content_row = main_row + 1
+  local content_row = main_row - 1
   local content_col = main_col + 1
 
   left_win = vim.api.nvim_open_win(left_buf, true, {

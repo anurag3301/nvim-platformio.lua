@@ -22,9 +22,28 @@ function render_menu_entries()
   return lines
 end
 
-        end
+local function find_clicked_entry(row)
+  local current_line = 0
+
+  for _, section in ipairs(entries) do
+    current_line = current_line + 1
+    if row == current_line then
+      -- Clicked on section title, not command
+      return { type = "section", section = section }
     end
-    return lines
+
+    if section.is_open then
+      for _, item in ipairs(section.entries) do
+        current_line = current_line + 1
+        if row == current_line then
+          -- Clicked on a command item
+          return { type = "entry", command = item.command }
+        end
+      end
+    end
+  end
+
+  return nil
 end
 
 

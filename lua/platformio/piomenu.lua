@@ -1,19 +1,27 @@
 local entries = require("platformio.piomenu_entries")
+local Job = require("plenary.job")  -- use plenary for async shell jobs easily
 
 local M = {}
 
+local left_buf, left_win
+local right_buf, right_win
 
 function render_menu_entries()
-    local lines = {}
-    for _, section in ipairs(entries) do
-        local line = (section.is_open and " " or " ") .. section.title
-        table.insert(lines, line)
+  local lines = {}
+  for _, section in ipairs(entries) do
+    local line = (section.is_open and " " or " ") .. section.title
+    table.insert(lines, line)
 
-        if section.is_open then
-            for _, item in ipairs(section.entries) do
-                local subline = "\t" .. item.title
-                table.insert(lines, subline)
-            end
+    if section.is_open then
+      for _, item in ipairs(section.entries) do
+        local subline = "\t" .. item.title
+        table.insert(lines, subline)
+      end
+    end
+  end
+  return lines
+end
+
         end
     end
     return lines

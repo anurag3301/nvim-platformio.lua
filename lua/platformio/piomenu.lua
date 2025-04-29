@@ -44,7 +44,6 @@ local function find_clicked_entry(row)
       for _, item in ipairs(section.entries) do
         current_line = current_line + 1
         if row == current_line then
-          -- Clicked on a command item
           return { type = "entry", command = item.command }
         end
       end
@@ -88,28 +87,29 @@ local function run_command_in_right(command)
   }):start()
 end
 
+local function handel_interaction()
+  if vim.api.nvim_get_current_win() ~= left_win then
+    return
+  end
+
+  local pos = vim.api.nvim_win_get_cursor(left_win)
+  local row = pos[1]
+  local entry = find_clicked_entry(row)
+
+  if entry then
+    if entry.type == "section" then
+      entry.section.is_open = not entry.section.is_open
+      render_menu_entries()
+    elseif entry.type == "entry" then
+      run_command_in_right(entry.command)
+    end
+  end
+end
+
 local function setup_mouse_click_handler()
   vim.on_key(function(key)
     if key == vim.api.nvim_replace_termcodes('<LeftMouse>', true, true, true) then
-      vim.defer_fn(function()
-        if vim.api.nvim_get_current_win() ~= left_win then
-          return
-        end
-
-        local pos = vim.api.nvim_win_get_cursor(left_win)
-        local row = pos[1]
-        local entry = find_clicked_entry(row)
-
-        if entry then
-          if entry.type == "section" then
-            entry.section.is_open = not entry.section.is_open
-            -- vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, ))
-            render_menu_entries()
-          elseif entry.type == "entry" then
-            run_command_in_right(entry.command)
-          end
-        end
-      end, 0)
+      vim.defer_fn(handel_interaction, 0)
     end
   end, vim.api.nvim_create_namespace('mouse_click_ns'))
 end
@@ -180,6 +180,12 @@ function M.piomenu()
       pcall(vim.api.nvim_win_close, right_win, true)
       pcall(vim.api.nvim_win_close, left_win, true)
     end,
+  })
+
+  vim.api.nvim_buf_set_keymap(left_buf, 'n', '<CR>', '', {
+    noremap = true,
+    silent = true,
+    callback = handel_interaction,
   })
 end
 

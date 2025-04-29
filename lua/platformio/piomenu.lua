@@ -8,18 +8,27 @@ local right_buf, right_win
 
 function render_menu_entries()
   local lines = {}
+  local highlights = {}
+
   for _, section in ipairs(entries) do
     local line = (section.is_open and " " or " ") .. section.title
     table.insert(lines, line)
+    table.insert(highlights, { hl_group = "Function", linenr = #lines - 1 })
 
     if section.is_open then
       for _, item in ipairs(section.entries) do
-        local subline = "      " .. item.title
+        local subline = "    " .. item.title
         table.insert(lines, subline)
+        table.insert(highlights, { hl_group = "String", linenr = #lines - 1 })
       end
     end
   end
-  return lines
+
+  vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, lines)
+
+  for _, hl in ipairs(highlights) do
+    vim.api.nvim_buf_add_highlight(left_buf, -1, hl.hl_group, hl.linenr, 0, -1)
+  end
 end
 
 local function find_clicked_entry(row)
@@ -94,7 +103,8 @@ local function setup_mouse_click_handler()
         if entry then
           if entry.type == "section" then
             entry.section.is_open = not entry.section.is_open
-            vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, render_menu_entries())
+            -- vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, ))
+            render_menu_entries()
           elseif entry.type == "entry" then
             run_command_in_right(entry.command)
           end
@@ -119,7 +129,8 @@ function M.piomenu()
   left_buf = vim.api.nvim_create_buf(false, true)
   right_buf = vim.api.nvim_create_buf(false, true)
 
-  vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, render_menu_entries())
+  -- vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, )
+  render_menu_entries()
   vim.api.nvim_buf_set_lines(right_buf, 0, -1, false, { "Output will appear here..." })
 
   local content_row = main_row - 1

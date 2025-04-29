@@ -52,6 +52,12 @@ local function run_command_in_right(command)
   Job:new({
     command = "sh",
     args = { "-c", command },
+    on_start = function()
+      vim.schedule(function()
+        vim.api.nvim_buf_set_lines(right_buf, 0, -1, false, { "Executing: " .. command, "" })
+        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
+      end)
+    end,
     on_stdout = function(_, line)
       vim.schedule(function()
         vim.api.nvim_buf_set_lines(right_buf, -1, -1, false, { line })

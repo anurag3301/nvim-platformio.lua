@@ -59,3 +59,8 @@ end, {
 vim.api.nvim_create_user_command('Piodebug', function()
   require('platformio.piodebug').piodebug()
 end, {})
+
+-- Piomenu
+vim.api.nvim_create_user_command('Piomenu', function()
+  require('platformio.piomenu').piomenu()
+end, {})

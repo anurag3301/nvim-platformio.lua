@@ -46,27 +46,29 @@ local function find_clicked_entry(row)
   return nil
 end
 
+
 local function run_command_in_right(command)
-  -- Clear right buffer first
   vim.api.nvim_buf_set_lines(right_buf, 0, -1, false, {})
 
-  -- Start a job asynchronously
   Job:new({
     command = "sh",
     args = { "-c", command },
     on_stdout = function(_, line)
       vim.schedule(function()
         vim.api.nvim_buf_set_lines(right_buf, -1, -1, false, { line })
+        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
       end)
     end,
     on_stderr = function(_, line)
       vim.schedule(function()
         vim.api.nvim_buf_set_lines(right_buf, -1, -1, false, { line })
+        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
       end)
     end,
     on_exit = function()
       vim.schedule(function()
         vim.api.nvim_buf_set_lines(right_buf, -1, -1, false, { "-- DONE --" })
+        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
       end)
     end,
   }):start()
@@ -147,6 +149,15 @@ function M.open_floating_window()
 
   -- Handle 'q'
   vim.api.nvim_buf_set_keymap(left_buf, 'n', 'q', '', {
+    nowait = true,
+    noremap = true,
+    silent = true,
+    callback = function()
+      pcall(vim.api.nvim_win_close, right_win, true)
+      pcall(vim.api.nvim_win_close, left_win, true)
+    end,
+  })
+  vim.api.nvim_buf_set_keymap(right_buf, 'n', 'q', '', {
     nowait = true,
     noremap = true,
     silent = true,

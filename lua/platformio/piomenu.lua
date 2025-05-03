@@ -1,10 +1,11 @@
 local entries = require("platformio.piomenu_entries")
-local Job = require("plenary.job")
+local Terminal = require('toggleterm.terminal').Terminal
+local utils = require 'platformio.utils'
 
 local M = {}
 
 local left_buf, left_win
-local right_buf, right_win
+local menu_term
 
 function render_menu_entries()
   local lines = {}
@@ -54,39 +55,6 @@ local function find_clicked_entry(row)
 end
 
 
-local function run_command_in_right(command)
-  vim.api.nvim_buf_set_lines(right_buf, 0, -1, false, {})
-
-  Job:new({
-    command = "sh",
-    args = { "-c", command },
-    on_start = function()
-      vim.schedule(function()
-        vim.api.nvim_buf_set_lines(right_buf, 0, -1, false, { "Executing: " .. command, "" })
-        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
-      end)
-    end,
-    on_stdout = function(_, line)
-      vim.schedule(function()
-        vim.api.nvim_buf_set_lines(right_buf, -1, -1, false, { line })
-        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
-      end)
-    end,
-    on_stderr = function(_, line)
-      vim.schedule(function()
-        vim.api.nvim_buf_set_lines(right_buf, -1, -1, false, { line })
-        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
-      end)
-    end,
-    on_exit = function()
-      vim.schedule(function()
-        vim.api.nvim_buf_set_lines(right_buf, -1, -1, false, { "-- DONE --" })
-        vim.api.nvim_win_set_cursor(right_win, { vim.api.nvim_buf_line_count(right_buf), 0 })
-      end)
-    end,
-  }):start()
-end
-
 local function handel_interaction()
   if vim.api.nvim_get_current_win() ~= left_win then
     return
@@ -101,7 +69,7 @@ local function handel_interaction()
       entry.section.is_open = not entry.section.is_open
       render_menu_entries()
     elseif entry.type == "entry" then
-      run_command_in_right(entry.command)
+      menu_term:send(entry.command, true)
     end
   end
 end
@@ -127,14 +95,31 @@ function M.piomenu()
   local right_width = content_width - left_width
 
   left_buf = vim.api.nvim_create_buf(false, true)
-  right_buf = vim.api.nvim_create_buf(false, true)
 
-  -- vim.api.nvim_buf_set_lines(left_buf, 0, -1, false, )
   render_menu_entries()
-  vim.api.nvim_buf_set_lines(right_buf, 0, -1, false, { "Output will appear here..." })
 
   local content_row = main_row - 1
   local content_col = main_col + 1
+
+  menu_term = Terminal:new {
+    cmd = vim.o.shell,
+    dir = utils.get_pioini_path(),
+    direction = "float",
+    auto_scroll = true,
+    float_opts = {
+      row = content_row,
+      col = content_col + left_width + 2,
+      width = right_width,
+      height = content_height,
+      winblend = 3,
+    },
+    on_close = function(t)
+      pcall(vim.api.nvim_win_close, left_win, true)
+    end
+
+  }
+  menu_term:toggle()
+
 
   left_win = vim.api.nvim_open_win(left_buf, true, {
     relative = "editor",
@@ -146,17 +131,7 @@ function M.piomenu()
     style = "minimal",
     border = "rounded",
   })
-
-  right_win = vim.api.nvim_open_win(right_buf, false, {
-    relative = "editor",
-    row = content_row,
-    col = content_col + left_width + 2,
-    width = right_width,
-    height = content_height,
-    focusable = true,
-    style = "minimal",
-    border = "rounded",
-  })
+  vim.cmd("stopinsert")
 
   setup_mouse_click_handler()
 
@@ -168,16 +143,17 @@ function M.piomenu()
     noremap = true,
     silent = true,
     callback = function()
-      pcall(vim.api.nvim_win_close, right_win, true)
+      menu_term:send("exit", true)
       pcall(vim.api.nvim_win_close, left_win, true)
     end,
   })
-  vim.api.nvim_buf_set_keymap(right_buf, 'n', 'q', '', {
+
+  vim.api.nvim_buf_set_keymap(menu_term["bufnr"], 'n', 'q', '', {
     nowait = true,
     noremap = true,
     silent = true,
     callback = function()
-      pcall(vim.api.nvim_win_close, right_win, true)
+      menu_term:send("exit", true)
       pcall(vim.api.nvim_win_close, left_win, true)
     end,
   })

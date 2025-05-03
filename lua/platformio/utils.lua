@@ -131,13 +131,16 @@ function M.file_exists(name)
   end
 end
 
-function M.cd_pioini()
+function M.get_pioini_path()
   for _, path in pairs(paths) do
     if M.file_exists(path .. '/platformio.ini') then
-      vim.cmd('cd ' .. path)
-      break
+      return path
     end
   end
+end
+
+function M.cd_pioini()
+  vim.cmd('cd ' .. M.get_pioini_path())
 end
 
 function M.pio_install_check()

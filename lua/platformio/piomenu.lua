@@ -143,7 +143,7 @@ function M.piomenu()
     noremap = true,
     silent = true,
     callback = function()
-      menu_term:send("exit", true)
+      menu_term:close()
       pcall(vim.api.nvim_win_close, left_win, true)
     end,
   })
@@ -153,7 +153,7 @@ function M.piomenu()
     noremap = true,
     silent = true,
     callback = function()
-      menu_term:send("exit", true)
+      menu_term:close()
       pcall(vim.api.nvim_win_close, left_win, true)
     end,
   })

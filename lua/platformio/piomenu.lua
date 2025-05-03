@@ -118,7 +118,7 @@ function M.piomenu()
     end
 
   }
-  menu_term:toggle()
+  menu_term:open()
 
 
   left_win = vim.api.nvim_open_win(left_buf, true, {

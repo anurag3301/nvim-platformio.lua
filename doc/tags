@@ -1,7 +1,8 @@
 :Pioinit	platformio.txt	/*:Pioinit*
 :Piorun	    platformio.txt	/*:Piorun*
 :Piolib 	platformio.txt	/*:Piolib*
-:Piocmd 	platformio.txt	/*:Piocmd*
+:Piocmdf 	platformio.txt	/*:Piocmdf*
+:Piocmdh 	platformio.txt	/*:Piocmdh*
 :Piomon 	platformio.txt	/*:Piomon*
 :Piomenu 	platformio.txt	/*:Piomenu*
 PlatfromIO	platformio.txt	/*PlatfromIO*

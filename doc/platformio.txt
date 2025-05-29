@@ -30,16 +30,17 @@ USAGE                                                    *platformio-usage*
                             `:Piorun clean`
 
                                    *:Piocmd*
-:Piocmd [cmd]           Run PlatformIO commands. Example: `:Piocmd device list`.
+:Piocmd[f|h] [cmd]       Run PlatformIO commands either in float or horizontal direction.
+                         Example: `:Piocmdf device list`.
                          The command argument is optional. If not provided, it
                          opens a floating toggleterm in the project root where
                          you can execute commands. Note: `pio` keyword is not
                          required in the command.
                          Examples:
-                            `:Piocmd`
-                            `:Piocmd run -e uno -t upload`
-                            `:Piocmd device list`
-                            `:Piocmd boards arduinouno --json-output`
+                            `:Piocmdh`
+                            `:Piocmdh run -e uno -t upload`
+                            `:Piocmdf device list`
+                            `:Piocmdf boards arduinouno --json-output`
 
                                    *:Piolib*
 :Piolib [libname]       Install a library by providing a keyword for search. A

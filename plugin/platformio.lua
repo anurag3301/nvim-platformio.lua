@@ -47,10 +47,18 @@ end, {
   nargs = '+',
 })
 
--- Piocmd
-vim.api.nvim_create_user_command('Piocmd', function(opts)
+-- Piocmdh    Piocmd horizontal terminal
+vim.api.nvim_create_user_command('Piocmdh', function(opts)
   local cmd_table = vim.split(opts.args, ' ')
-  require('platformio.piocmd').piocmd(cmd_table)
+  require('platformio.piocmd').piocmd(cmd_table, 'horizontal')
+end, {
+  nargs = '*',
+})
+
+-- Piocmdf    Piocmd float terminal
+vim.api.nvim_create_user_command('Piocmdf', function(opts)
+  local cmd_table = vim.split(opts.args, ' ')
+  require('platformio.piocmd').piocmd(cmd_table, 'float')
 end, {
   nargs = '*',
 })

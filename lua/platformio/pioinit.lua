@@ -63,7 +63,7 @@ local function pick_framework(board_details)
             .. selected_framework
             .. '"'
             .. (config.lsp == 'clangd' and ' && pio run -t compiledb ' or '')
-            .. utils.extra
+            -- .. utils.extra
           utils.ToggleTerminal(command, 'float')
         end)
         return true

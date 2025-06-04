@@ -61,7 +61,6 @@ USAGE                                                    *platformio-usage*
                                    *:Piodebug*
 :Pidebug		 Starts the default PlatformIO debugger with gdb
 
-
                                    *:Piomenu*
 :Piomenu                 Open a floating window with two panes. The left pane
                          displays an interactive PlatformIO menu. Click on any
@@ -69,6 +68,17 @@ USAGE                                                    *platformio-usage*
                          the right pane. Sections can be expanded or collapsed
                          by clicking on them. Use 'q' to close the floating
                          window.
+
+                                   *:PioTermQuit*
+:PioTermQuit             In noraml mode; :PioTermQuit as well as :q should quit
+                         the terminal.
+                         pressing q in normal mode will hide the terminal.
+                         You can see a list of pio terminals using :PioTermList
+                         command in normal mode.
+
+                                   *:PioTermList
+:PioTermList             You can see a list of pio terminals using :PioTermList
+                         command in normal mode. It is mapped to <leader>pl
 ==============================================================================
 
 vim:tw=78:sw=4:ts=8:ft=help:norl:noet:

@@ -5,7 +5,6 @@
 :Piocmdh 	platformio.txt	/*:Piocmdh*
 :Piomon 	platformio.txt	/*:Piomon*
 :Piomenu 	platformio.txt	/*:Piomenu*
-:PioTermQuit 	platformio.txt	/*:PioTermQuit*
 :PioTermList 	platformio.txt	/*:PiomTermList*
 PlatfromIO	platformio.txt	/*PlatfromIO*
 platformio-usage	platformio.txt	/*platformio-usage*

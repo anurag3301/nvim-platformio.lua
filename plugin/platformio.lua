@@ -73,8 +73,36 @@ vim.api.nvim_create_user_command('Piomenu', function()
 end, {})
 ------------------------------------------------------
 
+-- require('telescope').load_extension('ui-select')
 -- INFO: List ToggleTerminals
 vim.api.nvim_create_user_command('PioTermList', function()
+  local telescope = require('telescope')
+  telescope.setup {
+    extensions = {
+      ['ui-select'] = {
+        require('telescope.themes').get_dropdown({
+          borderchars = {
+            prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
+            results = { " ", " ", " ", " ", " ", " ", " ", " " },
+            preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+          },
+          prompt_position = "top", -- "top" or "bottom"
+          prompt_prefix = "🔍 ", -- Prompt prefix
+          selection_caret = "❯ ", -- Selection indicator
+          entry_prefix = "  ", -- Entry prefix
+          initial_mode = "insert", -- "insert" or "normal"
+          scroll_strategy = "cycle", -- "cycle" or "limit"
+          sorting_strategy = "ascending", -- "ascending" or "descending"
+          color_devicons = true, -- Color file icons
+          use_less = true, -- Use less for preview
+          -- prompt_prefix = " ",
+          -- selection_caret = " ",
+          -- color_devicons = true,
+        }),
+      },
+    },
+  }
+  telescope.load_extension('ui-select')
   local utils = require 'platformio.utils'
   local toggleterm_list = {}
 
@@ -84,9 +112,7 @@ vim.api.nvim_create_user_command('PioTermList', function()
       if terms[i].display_name:find('pio', 1) then
         local termtype = utils.strsplit(terms[i].display_name, ':')[1]
         table.insert(toggleterm_list, {
-          text = string.format('%d: %s (hidden: %s)', terms[i].id, termtype or '', tostring(terms[i].hidden)),
           term = terms[i],
-          id = terms[i].id,
           termtype = termtype, -- Store the terminal type [piomon or piocli]
         })
       end
@@ -94,31 +120,33 @@ vim.api.nvim_create_user_command('PioTermList', function()
   end
 
   if #toggleterm_list == 0 then
-    vim.api.nvim_echo({ { 'No PIO Toggleterm windows found.', 'Normal' } }, true, {})
+    vim.api.nvim_echo({ { 'No PIO terminal windows found.', 'Normal' } }, true, {})
     return
   end
 
-  local display_items = {}
-  for _, item in ipairs(toggleterm_list) do
-    table.insert(display_items, item.text) -- Use the constructed 'text'
-  end
-
-  vim.ui.select(display_items, {
-    prompt = 'Select a Toggleterm window:',
-    kind = 'ToggletermWindow',
-  }, function(selected_item, idx)
-    if selected_item then
-      local chosen = toggleterm_list[idx]
-      local win_type = vim.fn.win_gettype(chosen.term.window)
-      local win_open = win_type == '' or win_type == 'popup'
-      if chosen.term.window and (win_open and vim.api.nvim_win_get_buf(chosen.term.window) == chosen.term.bufnr) then
-        vim.api.nvim_set_current_win(chosen.term.window)
+  vim.ui.select(
+    toggleterm_list,
+    {
+      prompt = 'Select a PIO terminal window:',
+      format_item = function(item)
+        return string.format("%d:%s (hidden: %s)",
+          item.term.id,
+          item.termtype,
+          vim.api.nvim_buf_is_loaded(item.term.bufnr) and (vim.fn.bufwinid(item.term.bufnr) == -1))
+      end,
+      kind = 'PioTerminals',
+    }, function(chosen, _)
+      if chosen then
+        local win_type = vim.fn.win_gettype(chosen.term.window)
+        local win_open = win_type == '' or win_type == 'popup'
+        if chosen.term.window and (win_open and vim.api.nvim_win_get_buf(chosen.term.window) == chosen.term.bufnr) then
+          vim.api.nvim_set_current_win(chosen.term.window)
+        else
+          chosen.term:open()
+        end
+        vim.api.nvim_echo({ { 'Switched to PIO terminal: ' .. chosen.termtype, 'Normal' } }, true, {})
       else
-        chosen.term:open()
+        vim.api.nvim_echo({ { 'No PIO terminal window selected.', 'Normal' } }, true, {})
       end
-      vim.api.nvim_echo({ { 'Switched to Toggleterm: ' .. chosen.termtype, 'Normal' } }, true, {})
-    else
-      vim.api.nvim_echo({ { 'No PIO Toggleterm window selected.', 'Normal' } }, true, {})
-    end
-  end)
+    end)
 end, {})

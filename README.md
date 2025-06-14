@@ -38,6 +38,7 @@ return {
   dependencies = {
     { 'akinsho/toggleterm.nvim' },
     { 'nvim-telescope/telescope.nvim' },
+    { 'nvim-telescope/telescope-ui-select.nvim' },
     { 'nvim-lua/plenary.nvim' },
     {
       -- WhichKey helps you remember your Neovim keymaps,

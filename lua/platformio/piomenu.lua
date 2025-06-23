@@ -1,6 +1,14 @@
 local M = {}
 
 function M.piomenu(config)
+  local key = vim.api.nvim_replace_termcodes(config.menu_key, true, true, true)
+  local mapping = vim.fn.mapcheck(key, "")
+  if mapping ~= "" then
+    vim.api.nvim_err_writeln(config.menu_key .. " is mapped to: " .. mapping .. ", Leaving piomenu setup!!")
+    vim.api.nvim_err_writeln("Pick a different key map for piomenu in setup!!")
+    return
+  end
+
   local ok, wk = pcall(require, 'which-key') --will also load the package if it isn't loaded already
   if not ok then
     vim.api.nvim_echo({

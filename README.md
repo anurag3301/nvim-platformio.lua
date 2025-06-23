@@ -28,26 +28,28 @@ Check the install instructions on the [PlatformIO docs](https://docs.platformio.
 
 
 #### Plugin
-Install the plugin using packer
-```lua
-use {
-    'anurag3301/nvim-platformio.lua',
-    requires = {
-        {'akinsho/nvim-toggleterm.lua'},
-        {'nvim-telescope/telescope.nvim'},
-        {'nvim-lua/plenary.nvim'},
-    }
-}
-```
-Or Install the plugin using lazy
+Install the plugin using lazy
 ```lua
 return {
-    "anurag3301/nvim-platformio.lua",
-    dependencies = {
-        { "akinsho/nvim-toggleterm.lua" },
-        { "nvim-telescope/telescope.nvim" },
-        { "nvim-lua/plenary.nvim" },
+   'anurag3301/nvim-platformio.lua',
+  -- cmd = { 'Pioinit', 'Piorun', 'Piocmdh', 'Piocmdf', 'Piolib', 'Piomon', 'Piodebug', 'Piodb' },
+
+  -- dependencies are always lazy-loaded unless specified otherwise
+  dependencies = {
+    { 'akinsho/toggleterm.nvim' },
+    { 'nvim-telescope/telescope.nvim' },
+    { 'nvim-telescope/telescope-ui-select.nvim' },
+    { 'nvim-lua/plenary.nvim' },
+    {
+      -- WhichKey helps you remember your Neovim keymaps,
+      -- by showing available keybindings in a popup as you type.
+      'folke/which-key.nvim',
+      opts = {
+        preset = 'helix', --'modern', --"classic", --
+        sort = { 'order', 'group', 'manual', 'mod' },
+      },
     },
+  },
 }
 ```
 
@@ -55,10 +57,13 @@ return {
 
 ### Configuration
 ```lua
-require('platformio').setup({
-    lsp = "ccls" --default: ccls, other option: clangd
-                 -- If you pick clangd, it also creates compile_commands.json
-})
+  require('platformio').setup({
+    lsp = 'clangd', --default: ccls, other option: clangd
+    -- If you pick clangd, it also creates compile_commands.json
+
+    menu_key = '<leader>p',
+  })
+
 ```
 
 ### Lazy loading
@@ -66,15 +71,7 @@ require('platformio').setup({
 It's possible to lazy load the plugin using Lazy.nvim, this will load the plugins only when it is needed, to enable lazy loading, add this plugin spec to your config.
 
 ```lua
-cmd = {
-    "Pioinit",
-    "Piorun",
-    "Piocmd",
-    "Piolib",
-    "Piomon",
-    "Piodebug",
-    "Piodb",
-},
+cmd = { 'Pioinit', 'Piorun', 'Piocmdh', 'Piocmdf', 'Piolib', 'Piomon', 'Piodebug', 'Piodb' },
 ```
 
 

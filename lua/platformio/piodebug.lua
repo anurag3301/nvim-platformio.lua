@@ -8,7 +8,8 @@ function M.piodebug(args_table)
 
   utils.cd_pioini()
 
-  local command = string.format("pio debug --interface=gdb -- -x .pioinit %s", utils.extra)
+  local command = "pio debug --interface=gdb -- -x .pioinit"
+  -- local command = string.format("pio debug --interface=gdb -- -x .pioinit %s", utils.extra)
   utils.ToggleTerminal(command, "float")
 end
 

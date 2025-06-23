@@ -30,16 +30,17 @@ USAGE                                                    *platformio-usage*
                             `:Piorun clean`
 
                                    *:Piocmd*
-:Piocmd [cmd]           Run PlatformIO commands. Example: `:Piocmd device list`.
+:Piocmd[f|h] [cmd]       Run PlatformIO commands either in float or horizontal direction.
+                         Example: `:Piocmdf device list`.
                          The command argument is optional. If not provided, it
                          opens a floating toggleterm in the project root where
                          you can execute commands. Note: `pio` keyword is not
                          required in the command.
                          Examples:
-                            `:Piocmd`
-                            `:Piocmd run -e uno -t upload`
-                            `:Piocmd device list`
-                            `:Piocmd boards arduinouno --json-output`
+                            `:Piocmdh`
+                            `:Piocmdh run -e uno -t upload`
+                            `:Piocmdf device list`
+                            `:Piocmdf boards arduinouno --json-output`
 
                                    *:Piolib*
 :Piolib [libname]       Install a library by providing a keyword for search. A
@@ -60,14 +61,9 @@ USAGE                                                    *platformio-usage*
                                    *:Piodebug*
 :Pidebug		 Starts the default PlatformIO debugger with gdb
 
-
-                                   *:Piomenu*
-:Piomenu                 Open a floating window with two panes. The left pane
-                         displays an interactive PlatformIO menu. Click on any
-                         command to run it, and the output will appear live in
-                         the right pane. Sections can be expanded or collapsed
-                         by clicking on them. Use 'q' to close the floating
-                         window.
+                                   *:PioTermList
+:PioTermList             You can see a list of pio terminals using :PioTermList
+                         command in normal mode. It is mapped to <leader>pl
 ==============================================================================
 
 vim:tw=78:sw=4:ts=8:ft=help:norl:noet:

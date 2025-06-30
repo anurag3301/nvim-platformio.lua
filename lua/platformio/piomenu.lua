@@ -1,6 +1,9 @@
 local M = {}
 
 function M.piomenu(config)
+  if config.menu_key == nil then
+     return 
+  end
   local key = vim.api.nvim_replace_termcodes(config.menu_key, true, true, true)
   local mapping = vim.fn.mapcheck(key, "")
   if mapping ~= "" then

@@ -2,7 +2,7 @@
 local M = {}
 local default_config = {
   lsp = 'ccls',
-  menu_key = '<leader>p',
+  menu_key = nil,
 }
 
 M.config = vim.deepcopy(default_config)

@@ -40,10 +40,9 @@ return {
     { 'nvim-telescope/telescope.nvim' },
     { 'nvim-telescope/telescope-ui-select.nvim' },
     { 'nvim-lua/plenary.nvim' },
-    {
-      -- WhichKey helps you remember your Neovim keymaps,
-      -- by showing available keybindings in a popup as you type.
-      'folke/which-key.nvim',
+
+    -- which-key is optional dependency, if you wish not to have piomenu, you can remove it
+    {'folke/which-key.nvim',
       opts = {
         preset = 'helix', --'modern', --"classic", --
         sort = { 'order', 'group', 'manual', 'mod' },
@@ -61,6 +60,7 @@ return {
     lsp = 'clangd', --default: ccls, other option: clangd
     -- If you pick clangd, it also creates compile_commands.json
 
+    -- Comment out following line if you want to disable the piomenu.
     menu_key = '<leader>p',
   })
 

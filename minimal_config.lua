@@ -18,7 +18,14 @@ local plugins = {
         dependencies = {
             { "akinsho/nvim-toggleterm.lua" },
             { "nvim-telescope/telescope.nvim" },
+            { 'nvim-telescope/telescope-ui-select.nvim' },
             { "nvim-lua/plenary.nvim" },
+            {'folke/which-key.nvim',
+              opts = {
+                preset = 'helix', --'modern', --"classic", --
+                sort = { 'order', 'group', 'manual', 'mod' },
+              },
+            },
         },
     },
 }
@@ -31,3 +38,7 @@ require("lazy").setup(plugins, {
 
 vim.opt['number'] = true
 
+require('platformio').setup({
+  lsp = 'clangd',
+  menu_key = '<leader>p',
+})

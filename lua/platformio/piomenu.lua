@@ -1,17 +1,19 @@
 local M = {}
 
 function M.piomenu(config)
-
-
-  if config.menu_key == nil or config.menu_bindings == nil then
+  if config.menu_key == nil then
     return
   end
 
   local key = vim.api.nvim_replace_termcodes(config.menu_key, true, true, true)
-  local mapping = vim.fn.mapcheck(key, "")
-  if mapping ~= "" then
-    vim.api.nvim_err_writeln(config.menu_key .. " is mapped to: " .. mapping .. ", Leaving piomenu setup!!")
-    vim.api.nvim_err_writeln("Pick a different key map for piomenu in setup!!")
+  local mapping = vim.fn.mapcheck(key, '')
+  if mapping ~= '' then
+    vim.api.nvim_echo({
+      { config.menu_key .. ' is mapped to: ' .. mapping .. ', Leaving piomenu setup!!', 'ErrorMsg' },
+    }, true, {})
+    vim.api.nvim_echo({
+      { 'Pick a different key map for piomenu in setup!!', 'ErrorMsg' },
+    }, true, {})
     return
   end
 
@@ -21,30 +23,34 @@ function M.piomenu(config)
     return
   end
 
-  local prefix = config.menu_key
-  local Piocmd = config.piocmd or 'Piocmdf'
+  wk.setup({
+    preset = 'helix', --'modern', --"classic", --
+  })
+  local Config = require('which-key.config')
+  Config.sort = { 'order', 'group', 'manual', 'mod' }
 
-  local wk_table = {}
+  local icon = { icon = '  ', color = 'orange' } -- Assign platformio orange icon
 
-  -- Top level group
-  table.insert(wk_table, { prefix, group = ' PlatformIO:' })
+  local wk_table = { mode = { 'n', 'v' } }
+  table.insert(wk_table, { config.menu_key, group = config.menu_name, icon = icon })
 
-  -- Group headers
-  for _, group in ipairs(config.menu_bindings) do
-    table.insert(wk_table, { prefix .. group.key, group = group.group })
-  end
-
-  -- Key mappings
-  local commands = { mode = { 'n' } }
-  for _, group in ipairs(config.menu_bindings) do
-    for _, item in ipairs(group.elements) do
-      local full_key = prefix .. group.key .. item.key
-      local full_cmd = '<cmd>' .. (item.cmd:find('^Pio') and item.cmd or (Piocmd .. ' ' .. item.cmd)) .. '<CR>'
-      table.insert(commands, { full_key, full_cmd, desc = item.desc })
+  local function traverseMenu(menu, wkey)
+    wkey = wkey or config.menu_key
+    for _, child_node in ipairs(menu) do
+      if child_node.node == 'menu' then
+        traverseMenu(child_node.items, wkey .. child_node.shortcut)
+        table.insert(wk_table, { wkey .. child_node.shortcut, group = child_node.desc, icon = icon })
+      elseif child_node.node == 'item' then
+        table.insert(wk_table, {
+          wkey .. child_node.shortcut,
+          '<cmd> ' .. child_node.command .. '<CR>',
+          desc = child_node.desc,
+          icon = icon,
+        })
+      end
     end
   end
-
-  table.insert(wk_table, commands)
+  traverseMenu(config.menu_bindings)
 
   wk.add(wk_table)
 end

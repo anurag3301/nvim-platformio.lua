@@ -43,10 +43,11 @@ return {
 
     -- which-key is optional dependency, if you wish not to have piomenu, you can remove it
     {'folke/which-key.nvim',
-      opts = {
-        preset = 'helix', --'modern', --"classic", --
-        sort = { 'order', 'group', 'manual', 'mod' },
-      },
+      -- Some good defaults:
+      -- opts = {
+      --   preset = 'helix', --'modern', --"classic", --
+      --   sort = { 'order', 'group', 'manual', 'mod' },
+      -- },
     },
   },
 }

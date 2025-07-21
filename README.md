@@ -1,5 +1,5 @@
 <h1 align="center">
-    nvim-platfromio.lua
+    nvim-platformio.lua
 </h1>
 
 <p align="center">
@@ -13,7 +13,7 @@ https://github.com/anurag3301/nvim-platformio.lua/assets/52702259/528a2bbf-5a0e-
 
 <br>
 
-Try the plugin with this minimal standalone config without making any changes to your current plugin. **Very useful if you facing error while installation or using**
+Try the plugin with this minimal standalone config without modifying your existing nvim setup. **This is especially useful if you're encountering errors during installation or usage**.
 ```sh
 wget https://raw.githubusercontent.com/anurag3301/nvim-platformio.lua/main/minimal_config.lua
 nvim -u minimal_config.lua
@@ -24,7 +24,7 @@ nvim -u minimal_config.lua
 ## Installation
 
 #### PlatformIO Core
-Check the install instructions on the [PlatformIO docs](https://docs.platformio.org/en/latest/core/installation/index.html)
+Follow the installation instructions in the [PlatformIO documentation](https://docs.platformio.org/en/latest/core/installation/index.html).
 
 
 #### Plugin
@@ -34,7 +34,7 @@ return {
    'anurag3301/nvim-platformio.lua',
   -- cmd = { 'Pioinit', 'Piorun', 'Piocmdh', 'Piocmdf', 'Piolib', 'Piomon', 'Piodebug', 'Piodb' },
 
-  -- dependencies are always lazy-loaded unless specified otherwise
+  -- Dependencies are lazy-loaded by default unless specified otherwise.
   dependencies = {
     { 'akinsho/toggleterm.nvim' },
     { 'nvim-telescope/telescope.nvim' },
@@ -43,10 +43,11 @@ return {
 
     -- which-key is optional dependency, if you wish not to have piomenu, you can remove it
     {'folke/which-key.nvim',
-      opts = {
-        preset = 'helix', --'modern', --"classic", --
-        sort = { 'order', 'group', 'manual', 'mod' },
-      },
+      -- Some good defaults:
+      -- opts = {
+      --   preset = 'helix', --'modern', --"classic", --
+      --   sort = { 'order', 'group', 'manual', 'mod' },
+      -- },
     },
   },
 }
@@ -58,7 +59,7 @@ return {
 ```lua
   require('platformio').setup({
     lsp = 'clangd', --default: ccls, other option: clangd
-    -- If you pick clangd, it also creates compile_commands.json
+    -- If you choose clangd, it will also generate a compile_commands.json file
 
     -- Comment out following line if you want to disable the piomenu.
     menu_key = '<leader>p',
@@ -66,7 +67,8 @@ return {
 
 ```
 
-### Following are the default keybindings, you can overwrite them in the config
+### Keybinds
+These are the default keybindings, which you can override in your configuration.
 ```lua
 require('platformio').setup({
 

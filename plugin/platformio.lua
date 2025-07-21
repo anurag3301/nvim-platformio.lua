@@ -9,7 +9,7 @@
 -- Pioinit
 vim.api.nvim_create_user_command('Pioinit', function()
   require('platformio.pioinit').pioinit()
-end, {})
+end, {force = true})
 
 -- Piodb
 vim.api.nvim_create_user_command('Piodb', function()

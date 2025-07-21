@@ -314,7 +314,11 @@ function M.get_pioini_path()
 end
 
 function M.cd_pioini()
-  vim.cmd("cd " .. M.get_pioini_path())
+  if(vim.g.platformioRootDir ~= nil) then
+    vim.cmd("cd " .. vim.g.platformioRootDir)
+	else
+	  vim.cmd("cd " .. M.get_pioini_path())
+	end
 end
 
 function M.pio_install_check()

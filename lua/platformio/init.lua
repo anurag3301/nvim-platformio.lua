@@ -162,14 +162,14 @@ function M.setup(user_config)
     local err = false
     for key, value in pairs(user_config or {}) do
       if not valid_keys[key] then
-        local error_message = string.format("Invalid PlatformIO settings key-value: %s = '%s'", key, value)
+        local error_message = string.format('Invalid PlatformIO settings key-value: %s = "%s"', key, value)
         vim.api.nvim_echo({ { error_message, 'ErrorMsg' } }, true, {})
         err = true
       end
     end
     if user_config.lsp and not (user_config.lsp == 'ccls' or user_config.lsp == 'clangd') then
       vim.api.nvim_echo(
-        { { "Invalid PlatformIO lsp '" .. user_config.lsp .. "', {allowed 'clangd' or 'ccls'} (default '" .. M.config.lsp .. "' will be used)", 'ErrorMsg' } },
+        { { 'Invalid PlatformIO lsp "' .. user_config.lsp .. '", {allowed "clangd" or "ccls"} (default "' .. M.config.lsp .. '" will be used)', 'ErrorMsg' } },
         true,
         {}
       )

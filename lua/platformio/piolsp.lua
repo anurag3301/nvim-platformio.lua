@@ -60,28 +60,38 @@ local function gen_compile_commands(build_flags)
   f:close()
 end
 
-local function gitignore_compile_commands()
+local function gitignore_lsp_configs()
   local gitignore_path = vim.fs.joinpath(vim.g.platformioRootDir, '.gitignore')
   local file = io.open(gitignore_path, 'r')
+  local compile_commands_exsits = false
+  local ccls_exists = false
+
   if file then
     for line in file:lines() do
       if line:match('^%s*compile_commands%.json%s*$') then
-        file:close()
-        return
+        compile_commands_exsits = true
+      end
+      if line:match('^%s*.ccls%s*$') then
+        ccls_exists = true
       end
     end
     file:close()
   end
 
   file = io.open(gitignore_path, 'a')
-  file:write('compile_commands.json\n')
+  if not compile_commands_exsits then
+    file:write('compile_commands.json\n')
+  end
+  if not ccls_exists then
+    file:write('.ccls\n')
+  end
   file:close()
 end
 
 function M.gen_clangd_config()
   local build_flags = process_ccls()
   gen_compile_commands(build_flags)
-  gitignore_compile_commands()
+  gitignore_lsp_configs()
 end
 
 function M.piolsp()
@@ -94,7 +104,7 @@ function M.piolsp()
     M.gen_clangd_config()
   end
   vim.notify('LSP config generation completed!', vim.log.levels.INFO)
-  vim.cmd("LspRestart")
+  vim.cmd('LspRestart')
 end
 
 return M

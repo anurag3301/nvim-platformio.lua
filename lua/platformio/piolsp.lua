@@ -4,59 +4,58 @@ local utils = require('platformio.utils')
 local config = require('platformio').config
 
 local function process_ccls()
-    local f = io.open(".ccls", "rb") 
+    local flags_allowed = {"%", "-W", "-std"}
+
+    local f = io.open(vim.fs.joinpath(vim.g.platformioRootDir, '.ccls'), 'rb') 
     if not f then 
-        print(".ccls file not found")
-        return
+        vim.notify('.ccls file not found', vim.log.levels.ERROR)
+        return {}
     end
 
     local compiler = f:read()
     local build_flags = {compiler}
-
-    local flags_allowed = {"%", "-W", "-std"}
-
 
     for line in f:lines() do
         if #line == 0 or string.sub(line, 1, 1) == '#' then
             goto continue
         end
 
-        if check_prefix(line, "-I") or check_prefix(line, "-D") then
+        if utils.check_prefix(line, "-I") or utils.check_prefix(line, "-D") then
             table.insert(build_flags, line)
         end
-        if check_prefix(line, "%cpp") then
-            splitted = strsplit(line, " ")
+        if utils.check_prefix(line, "%cpp") then
+            splitted = utils.strsplit(line, " ")
             for _, flag in ipairs(splitted) do
                 for _, flag_check in ipairs(flags_allowed) do
-                    if check_prefix(flag, flag_check) then
+                    if utils.check_prefix(flag, flag_check) then
                         table.insert(build_flags, flag)
-                    end 
+                    end
                 end
             end
         end
-        
+       
         ::continue::
     end
 
-    f:close() 
+    f:close()
 
     return build_flags
 end
 
 local function gen_compile_commands(build_flags)
-    local cwd = vim.fn.getcwd()
+    local project_root = vim.g.platformioRootDir
     local build_cmd = "" 
     for _, flag in ipairs(build_flags) do
         build_cmd = build_cmd .. flag .. " " 
     end
 
     local entry = {{
-        directory= cwd,
-        file = vim.fs.joinpath(cwd, "src", "main.cpp"),
+        directory= project_root,
+        file = vim.fs.joinpath(project_root, "src", "main.cpp"),
         command= build_cmd
     }}
 
-    local f = io.open("compile_commands.json", "w") 
+    local f = io.open(vim.fs.joinpath(project_root, "compile_commands.json"), "w") 
     f:write(vim.json.encode(entry, {indent="  ", sort_keys=true}))
     f:close()
 end

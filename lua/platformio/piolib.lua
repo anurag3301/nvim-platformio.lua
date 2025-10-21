@@ -1,34 +1,34 @@
 local M = {}
 
 local config = require('platformio').config
-local curl = require 'plenary.curl'
+local curl = require('plenary.curl')
 
-local pickers = require 'telescope.pickers'
-local finders = require 'telescope.finders'
-local entry_display = require 'telescope.pickers.entry_display'
-local make_entry = require 'telescope.make_entry'
+local pickers = require('telescope.pickers')
+local finders = require('telescope.finders')
+local entry_display = require('telescope.pickers.entry_display')
+local make_entry = require('telescope.make_entry')
 local conf = require('telescope.config').values
-local actions = require 'telescope.actions'
-local action_state = require 'telescope.actions.state'
-local utils = require 'platformio.utils'
-local previewers = require 'telescope.previewers'
+local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
+local utils = require('platformio.utils')
+local previewers = require('telescope.previewers')
 
 local libentry_maker = function(opts)
-  local displayer = entry_display.create {
+  local displayer = entry_display.create({
     separator = '▏',
     items = {
       { width = 20 },
       { width = 20 },
       { remaining = true },
     },
-  }
+  })
 
   local make_display = function(entry)
-    return displayer {
+    return displayer({
       entry.value.name,
       entry.value.owner,
       entry.value.description,
-    }
+    })
   end
 
   return function(entry)
@@ -50,23 +50,26 @@ local function pick_library(json_data)
   pickers
     .new(opts, {
       prompt_title = 'Libraries',
-      finder = finders.new_table {
+      finder = finders.new_table({
         results = json_data['items'],
         entry_maker = opts.entry_maker or libentry_maker(opts),
-      },
+      }),
       attach_mappings = function(prompt_bufnr, _)
         actions.select_default:replace(function()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           local pkg_name = selection['value']['owner'] .. '/' .. selection['value']['name']
           -- Run compiledb targets and re initialise project after installing library to environments declared in "platformio.ini"
-          local command = 'pio pkg install --library "' .. pkg_name .. '" && pio project init --ide=vim' .. (config.lsp == 'clangd' and ' && pio run -t compiledb ' or '') -- .. utils.extra
+          local command = 'pio pkg install --library "'
+            .. pkg_name
+            .. '" && pio project init --ide=vim'
+            .. (config.lsp == 'clangd' and ' && pio run -t compiledb ' or '') -- .. utils.extra
           utils.ToggleTerminal(command, 'float')
         end)
         return true
       end,
 
-      previewer = previewers.new_buffer_previewer {
+      previewer = previewers.new_buffer_previewer({
         title = 'Package Info',
         define_preview = function(self, entry, _)
           local json = utils.strsplit(vim.inspect(entry['value']['data']), '\n')
@@ -80,7 +83,7 @@ local function pick_library(json_data)
             vim.api.nvim_set_option_value('wrapmargin', 2, { buf = bufnr })
           end, 0)
         end,
-      },
+      }),
       sorter = conf.generic_sorter(opts),
     })
     :find()

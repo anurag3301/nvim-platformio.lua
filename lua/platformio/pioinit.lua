@@ -1,32 +1,32 @@
 local M = {}
 
-local pickers = require 'telescope.pickers'
-local finders = require 'telescope.finders'
+local pickers = require('telescope.pickers')
+local finders = require('telescope.finders')
 local telescope_conf = require('telescope.config').values
-local actions = require 'telescope.actions'
-local action_state = require 'telescope.actions.state'
-local entry_display = require 'telescope.pickers.entry_display'
-local make_entry = require 'telescope.make_entry'
-local utils = require 'platformio.utils'
-local previewers = require 'telescope.previewers'
+local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
+local entry_display = require('telescope.pickers.entry_display')
+local make_entry = require('telescope.make_entry')
+local utils = require('platformio.utils')
+local previewers = require('telescope.previewers')
 local config = require('platformio').config
 
 local boardentry_maker = function(opts)
-  local displayer = entry_display.create {
+  local displayer = entry_display.create({
     separator = '▏',
     items = {
       { width = 35 },
       { width = 20 },
       { width = 15 },
     },
-  }
+  })
 
   local make_display = function(entry)
-    return displayer {
+    return displayer({
       entry.value.name,
       entry.value.vendor,
       entry.value.platform,
-    }
+    })
   end
 
   return function(entry)
@@ -49,9 +49,9 @@ local function pick_framework(board_details)
   pickers
     .new(opts, {
       prompt_title = 'frameworks',
-      finder = finders.new_table {
+      finder = finders.new_table({
         results = board_details['frameworks'],
-      },
+      }),
       attach_mappings = function(prompt_bufnr, _)
         actions.select_default:replace(function()
           actions.close(prompt_bufnr)
@@ -63,7 +63,7 @@ local function pick_framework(board_details)
             .. selected_framework
             .. '"'
             .. (config.lsp == 'clangd' and ' && pio run -t compiledb ' or '')
-            -- .. utils.extra
+          -- .. utils.extra
           utils.ToggleTerminal(command, 'float')
         end)
         return true
@@ -78,10 +78,10 @@ local function pick_board(json_data)
   pickers
     .new(opts, {
       prompt_title = 'Boards',
-      finder = finders.new_table {
+      finder = finders.new_table({
         results = json_data,
         entry_maker = opts.entry_maker or boardentry_maker(opts),
-      },
+      }),
       attach_mappings = function(prompt_bufnr, _)
         actions.select_default:replace(function()
           actions.close(prompt_bufnr)
@@ -90,7 +90,7 @@ local function pick_board(json_data)
         end)
         return true
       end,
-      previewer = previewers.new_buffer_previewer {
+      previewer = previewers.new_buffer_previewer({
         title = 'Board Info',
         define_preview = function(self, entry, _)
           local json = utils.strsplit(vim.inspect(entry['value']['data']), '\n')
@@ -104,7 +104,7 @@ local function pick_board(json_data)
             vim.api.nvim_set_option_value('wrapmargin', 2, { buf = bufnr })
           end, 0)
         end,
-      },
+      }),
       sorter = telescope_conf.generic_sorter(opts),
     })
     :find()
@@ -121,7 +121,7 @@ function M.pioinit()
   if not handel then
     return
   end
-  local json_str = handel:read '*a'
+  local json_str = handel:read('*a')
   handel:close()
 
   if #json_str == 0 then
@@ -130,7 +130,7 @@ function M.pioinit()
     if not handel then
       return
     end
-    local command_output = handel:read '*a'
+    local command_output = handel:read('*a')
     handel:close()
     vim.notify('Some error occured while executing `' .. command .. "`', command output: \n", vim.log.levels.WARN)
     print(command_output)

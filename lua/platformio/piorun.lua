@@ -1,6 +1,6 @@
 local M = {}
 
-local utils = require 'platformio.utils'
+local utils = require('platformio.utils')
 
 function M.piobuild()
   utils.cd_pioini()

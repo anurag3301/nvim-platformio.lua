@@ -1,4 +1,4 @@
-local utils = require 'platformio.utils'
+local utils = require('platformio.utils')
 local M = {}
 
 function M.piomon(args_table)

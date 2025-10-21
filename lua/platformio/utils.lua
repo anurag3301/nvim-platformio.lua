@@ -12,7 +12,7 @@ function M.strsplit(inputstr, del)
 end
 
 function M.check_prefix(str, prefix)
-    return str:sub(1, #prefix) == prefix
+  return str:sub(1, #prefix) == prefix
 end
 
 local function pathmul(n)
@@ -40,9 +40,9 @@ end
 local function getPreviousWindow(orig_window)
   local prev = {
     orig_window = orig_window,
-    term = nil,    --active terminal
-    cli = nil,     --cli terminal
-    mon = nil,     --mon terminal
+    term = nil, --active terminal
+    cli = nil, --cli terminal
+    mon = nil, --mon terminal
     float = false, --is active terminal direction float
   }
   local terms = require('toggleterm.terminal').get_all(true)
@@ -81,7 +81,7 @@ local function send(term, cmd)
   vim.fn.chansend(term.job_id, cmd .. M.enter())
   if vim.api.nvim_buf_is_loaded(term.bufnr) and vim.api.nvim_buf_is_valid(term.bufnr) then
     if term.window and vim.api.nvim_win_is_valid(term.window) then --vim.ui.term_has_open_win(term) then
-      vim.api.nvim_set_current_win(term.window)                    -- terminal focus
+      vim.api.nvim_set_current_win(term.window) -- terminal focus
       vim.api.nvim_buf_call(term.bufnr, function()
         local mode = vim.api.nvim_get_mode().mode
         if mode == 'n' or mode == 'nt' then
@@ -204,13 +204,13 @@ function M.ToggleTerminal(command, direction)
 
       local name_splt = M.strsplit(t.display_name, ':')
       vim.api.nvim_echo({
-        { 'ToggleTerm ',                           'MoreMsg' },
-        { '(Term name: ' .. name_splt[1] .. ')',   'MoreMsg' },
+        { 'ToggleTerm ', 'MoreMsg' },
+        { '(Term name: ' .. name_splt[1] .. ')', 'MoreMsg' },
         { '(Prev win ID: ' .. name_splt[2] .. ')', 'MoreMsg' },
-        { '(Term Win ID: ' .. t.window .. ')',     'MoreMsg' },
-        { '(Term Buffer#: ' .. t.bufnr .. ')',     'MoreMsg' },
-        { '(Term id: ' .. t.id .. ')',             'MoreMsg' },
-        { '(Job ID: ' .. t.job_id .. ')',          'MoreMsg' },
+        { '(Term Win ID: ' .. t.window .. ')', 'MoreMsg' },
+        { '(Term Buffer#: ' .. t.bufnr .. ')', 'MoreMsg' },
+        { '(Term id: ' .. t.id .. ')', 'MoreMsg' },
+        { '(Job ID: ' .. t.job_id .. ')', 'MoreMsg' },
       }, true, {})
     end,
 
@@ -318,16 +318,15 @@ function M.get_pioini_path()
 end
 
 function M.cd_pioini()
-  if(vim.g.platformioRootDir ~= nil) then
+  if vim.g.platformioRootDir ~= nil then
     vim.cmd('cd ' .. vim.g.platformioRootDir)
-	else
-	  vim.cmd('cd ' .. M.get_pioini_path())
-	end
+  else
+    vim.cmd('cd ' .. M.get_pioini_path())
+  end
 end
 
 function M.pio_install_check()
-  local handel = (jit.os == 'Windows') and assert(io.popen('where.exe pio 2>./nul')) or
-  assert(io.popen('which pio 2>/dev/null'))
+  local handel = (jit.os == 'Windows') and assert(io.popen('where.exe pio 2>./nul')) or assert(io.popen('which pio 2>/dev/null'))
   local pio_path = assert(handel:read('*a'))
   handel:close()
 

@@ -4,91 +4,90 @@ local utils = require('platformio.utils')
 local config = require('platformio').config
 
 local function process_ccls()
-    local flags_allowed = {"%", "-W", "-std"}
+  local flags_allowed = { '%', '-W', '-std' }
 
-    local f = io.open(vim.fs.joinpath(vim.g.platformioRootDir, '.ccls'), 'rb') 
-    if not f then 
-        vim.notify('.ccls file not found', vim.log.levels.ERROR)
-        return {}
+  local f = io.open(vim.fs.joinpath(vim.g.platformioRootDir, '.ccls'), 'rb')
+  if not f then
+    vim.notify('.ccls file not found', vim.log.levels.ERROR)
+    return {}
+  end
+
+  local compiler = f:read()
+  local build_flags = { compiler }
+
+  for line in f:lines() do
+    if #line == 0 or string.sub(line, 1, 1) == '#' then
+      goto continue
     end
 
-    local compiler = f:read()
-    local build_flags = {compiler}
-
-    for line in f:lines() do
-        if #line == 0 or string.sub(line, 1, 1) == '#' then
-            goto continue
+    if utils.check_prefix(line, '-I') or utils.check_prefix(line, '-D') then
+      table.insert(build_flags, line)
+    end
+    if utils.check_prefix(line, '%cpp') then
+      splitted = utils.strsplit(line, ' ')
+      for _, flag in ipairs(splitted) do
+        for _, flag_check in ipairs(flags_allowed) do
+          if utils.check_prefix(flag, flag_check) then
+            table.insert(build_flags, flag)
+          end
         end
-
-        if utils.check_prefix(line, "-I") or utils.check_prefix(line, "-D") then
-            table.insert(build_flags, line)
-        end
-        if utils.check_prefix(line, "%cpp") then
-            splitted = utils.strsplit(line, " ")
-            for _, flag in ipairs(splitted) do
-                for _, flag_check in ipairs(flags_allowed) do
-                    if utils.check_prefix(flag, flag_check) then
-                        table.insert(build_flags, flag)
-                    end
-                end
-            end
-        end
-       
-        ::continue::
+      end
     end
 
-    f:close()
+    ::continue::
+  end
 
-    return build_flags
+  f:close()
+
+  return build_flags
 end
 
 local function gen_compile_commands(build_flags)
-    local project_root = vim.g.platformioRootDir
-    local build_cmd = "" 
-    for _, flag in ipairs(build_flags) do
-        build_cmd = build_cmd .. flag .. " " 
-    end
+  local project_root = vim.g.platformioRootDir
+  local build_cmd = ''
+  for _, flag in ipairs(build_flags) do
+    build_cmd = build_cmd .. flag .. ' '
+  end
 
-    local entry = {{
-        directory= project_root,
-        file = vim.fs.joinpath(project_root, "src", "main.cpp"),
-        command= build_cmd
-    }}
+  local entry = { {
+    directory = project_root,
+    file = vim.fs.joinpath(project_root, 'src', 'main.cpp'),
+    command = build_cmd,
+  } }
 
-    local f = io.open(vim.fs.joinpath(project_root, "compile_commands.json"), "w") 
-    f:write(vim.json.encode(entry, {indent="  ", sort_keys=true}))
-    f:close()
+  local f = io.open(vim.fs.joinpath(project_root, 'compile_commands.json'), 'w')
+  f:write(vim.json.encode(entry, { indent = '  ', sort_keys = true }))
+  f:close()
 end
 
 local function gitignore_compile_commands()
-    local gitignore_path = vim.fs.joinpath(vim.g.platformioRootDir, ".gitignore")
-    local file = io.open(gitignore_path, "r")
-    if file then
-        for line in file:lines() do
-            if line:match("^%s*compile_commands%.json%s*$") then
-                file:close()
-                return
-            end
-        end
+  local gitignore_path = vim.fs.joinpath(vim.g.platformioRootDir, '.gitignore')
+  local file = io.open(gitignore_path, 'r')
+  if file then
+    for line in file:lines() do
+      if line:match('^%s*compile_commands%.json%s*$') then
         file:close()
+        return
+      end
     end
-
-    file = io.open(gitignore_path, "a")
-    file:write("compile_commands.json\n")
     file:close()
+  end
+
+  file = io.open(gitignore_path, 'a')
+  file:write('compile_commands.json\n')
+  file:close()
 end
 
 function M.gen_clangd_config()
-    local build_flags = process_ccls()
-    gen_compile_commands(build_flags)
-    gitignore_compile_commands()
+  local build_flags = process_ccls()
+  gen_compile_commands(build_flags)
+  gitignore_compile_commands()
 end
-
 
 function M.piolsp()
   local command = 'pio project init --ide=vim'
-  local handle = io.popen(command, "r")
-  local result = handle:read("*a")
+  local handle = io.popen(command, 'r')
+  local result = handle:read('*a')
   handle:close()
 
   if config.lsp == 'clangd' then

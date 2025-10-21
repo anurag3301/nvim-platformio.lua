@@ -94,6 +94,7 @@ function M.piolsp()
     M.gen_clangd_config()
   end
   vim.notify('LSP config generation completed!', vim.log.levels.INFO)
+  vim.cmd("LspRestart")
 end
 
 return M

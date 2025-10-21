@@ -11,6 +11,10 @@ function M.strsplit(inputstr, del)
   return t
 end
 
+function M.check_prefix(str, prefix)
+    return str:sub(1, #prefix) == prefix
+end
+
 local function pathmul(n)
   return '..' .. string.rep('/..', n)
 end

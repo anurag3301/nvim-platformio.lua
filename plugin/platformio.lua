@@ -12,8 +12,8 @@ vim.api.nvim_create_user_command('Pioinit', function()
 end, {force = true})
 
 -- Piodb
-vim.api.nvim_create_user_command('Piodb', function()
-  require('platformio.piodb').piodb()
+vim.api.nvim_create_user_command('PioLSP', function()
+  require('platformio.piolsp').piolsp()
 end, {})
 
 -- Piorun

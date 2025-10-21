@@ -57,13 +57,15 @@ local function pick_framework(board_details)
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           local selected_framework = selection[1]
+          local generate_compile_commands =
+            ' && pio run -t compiledb && grep -q "compile_commands.json" .gitignore 2>/dev/null || echo "compile_commands.json" >> .gitignore'
           local command = 'pio project init --ide=vim --board '
             .. board_details['id']
             .. ' --project-option "framework='
             .. selected_framework
             .. '"'
-            .. (config.lsp == 'clangd' and ' && pio run -t compiledb ' or '')
-            -- .. utils.extra
+            .. (config.lsp == 'clangd' and generate_compile_commands or '')
+          -- .. utils.extra
           utils.ToggleTerminal(command, 'float')
         end)
         return true

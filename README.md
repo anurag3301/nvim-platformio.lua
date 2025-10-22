@@ -75,6 +75,7 @@ return {
     { 'nvim-telescope/telescope-ui-select.nvim' },
     { 'nvim-lua/plenary.nvim' },
     { 'folke/which-key.nvim' },
+    { 'nvim-treesitter/nvim-treesitter' }
   },
 }
 ```

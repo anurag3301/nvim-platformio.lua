@@ -3,6 +3,22 @@ local M = {}
 local utils = require('platformio.utils')
 local config = require('platformio').config
 
+local function escape_flags(flags)
+  local escaped_flags = {}
+
+  for _, flag in ipairs(flags) do
+    local escaped = flag
+    escaped = escaped:gsub('\\', '\\\\') -- Escape backslashes first
+    escaped = escaped:gsub('"', '\\"') -- Escape double quotes (for -D macros)
+    -- Escape parentheses (common in include paths)
+    escaped = escaped:gsub('%(', '\\(')
+    escaped = escaped:gsub('%)', '\\)')
+    table.insert(escaped_flags, escaped)
+  end
+
+  return escaped_flags
+end
+
 local function process_ccls()
   local flags_allowed = { '%', '-W', '-std' }
 
@@ -39,7 +55,7 @@ local function process_ccls()
 
   f:close()
 
-  return build_flags
+  return escape_flags(build_flags)
 end
 
 local function gen_compile_commands(build_flags)

@@ -39,6 +39,7 @@ local plugins = {
                 require('lazy').load({ plugins = { 'nvim-platformio.lua' } })
               elseif args.match == 'LazyLoad' then
                 vim.notify('PlatformIO loaded', vim.log.levels.INFO, { title = 'PlatformIO' })
+                require("platformio").setup(vim.g.pioConfig)
                 vim.cmd('Pioinit')
               end
             end,
@@ -57,6 +58,7 @@ local plugins = {
       { 'nvim-telescope/telescope-ui-select.nvim' },
       { 'nvim-lua/plenary.nvim' },
       { 'folke/which-key.nvim' },
+      { 'nvim-treesitter/nvim-treesitter' }
     },
   },
 }
@@ -69,10 +71,9 @@ require('lazy').setup(plugins, {
 
 vim.opt['number'] = true
 
-local pok, platformio = pcall(require, 'platformio')
-if pok then
-  platformio.setup({
+vim.g.pioConfig ={
     lsp = 'clangd',
     menu_key = '<leader>\\', -- replace this menu key  to your convenience
-  })
-end
+} 
+local pok, platformio = pcall(require, 'platformio')
+if pok then platformio.setup(vim.g.pioConfig) end

@@ -56,6 +56,7 @@ return {
               require('lazy').load({ plugins = { 'nvim-platformio.lua' } })
             elseif args.match == 'LazyLoad' then
               vim.notify('PlatformIO loaded', vim.log.levels.INFO, { title = 'PlatformIO' })
+              require("platformio").setup(vim.g.pioConfig)
               vim.cmd('Pioinit')
             end
           end,
@@ -82,13 +83,12 @@ return {
 
 ### Configuration
 ```lua
-    local pok, platformio = pcall(require, 'platformio')
-    if pok then
-      platformio.setup({
-        lsp = 'clangd',
-        menu_key = '<leader>\\', -- replace this menu key  to your convenience
-      })
-    end
+vim.g.pioConfig ={
+    lsp = 'clangd',
+    menu_key = '<leader>\\', -- replace this menu key  to your convenience
+} 
+local pok, platformio = pcall(require, 'platformio')
+if pok then platformio.setup(vim.g.pioConfig) end
 ```
 
 ### Keybinds

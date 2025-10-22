@@ -11,9 +11,11 @@ vim.api.nvim_create_user_command('Pioinit', function()
   require('platformio.pioinit').pioinit()
 end, { force = true })
 
--- Piodb
+-- Piolsp
 vim.api.nvim_create_user_command('PioLSP', function()
-  require('platformio.piolsp').piolsp()
+  vim.schedule(function()
+    require('platformio.piolsp').piolsp()
+  end)
 end, {})
 
 -- Piorun

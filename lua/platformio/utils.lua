@@ -109,7 +109,11 @@ end
 
 ------------------------------------------------------
 -- INFO: ToggleTerminal
-function M.ToggleTerminal(command, direction)
+function M.ToggleTerminal(command, direction, resetLSP)
+  if resetLSP == nil then
+    resetLSP = false
+  end
+
   local status_ok, _ = pcall(require, 'toggleterm')
   if not status_ok then
     vim.api.nvim_echo({ { 'toggleterm not found!', 'ErrorMsg' } }, true, {})
@@ -222,6 +226,9 @@ function M.ToggleTerminal(command, direction)
         vim.api.nvim_set_current_win(orig_window)
       else
         vim.api.nvim_set_current_win(0)
+      end
+      if resetLSP then
+        vim.cmd(':PioLSP')
       end
     end,
 

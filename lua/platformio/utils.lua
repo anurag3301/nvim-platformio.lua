@@ -5,6 +5,9 @@ M.extra = ' && echo . && echo . && echo Please Press ENTER to continue'
 
 function M.strsplit(inputstr, del)
   local t = {}
+  if type(inputstr) ~= "string" or type(inputstr) ~= "string" then
+    return t
+  end
   for str in string.gmatch(inputstr, '([^' .. del .. ']+)') do
     table.insert(t, str)
   end

@@ -1,5 +1,7 @@
 local M = {}
 
+local config = require('platformio').config
+
 -- M.extra = 'printf \'\\\\n\\\\033[0;33mPlease Press ENTER to continue \\\\033[0m\'; read'
 M.extra = ' && echo . && echo . && echo Please Press ENTER to continue'
 
@@ -206,16 +208,18 @@ function M.ToggleTerminal(command, direction, resetLSP)
         PioTermClose(t)
       end, { desc = 'PioTermClose', buffer = t.bufnr })
 
+      if config.debug then
       local name_splt = M.strsplit(t.display_name, ':')
-      vim.api.nvim_echo({
-        { 'ToggleTerm ', 'MoreMsg' },
-        { '(Term name: ' .. name_splt[1] .. ')', 'MoreMsg' },
-        { '(Prev win ID: ' .. name_splt[2] .. ')', 'MoreMsg' },
-        { '(Term Win ID: ' .. t.window .. ')', 'MoreMsg' },
-        { '(Term Buffer#: ' .. t.bufnr .. ')', 'MoreMsg' },
-        { '(Term id: ' .. t.id .. ')', 'MoreMsg' },
-        { '(Job ID: ' .. t.job_id .. ')', 'MoreMsg' },
-      }, true, {})
+        vim.api.nvim_echo({
+          { 'ToggleTerm ', 'MoreMsg' },
+          { '(Term name: ' .. name_splt[1] .. ')', 'MoreMsg' },
+          { '(Prev win ID: ' .. name_splt[2] .. ')', 'MoreMsg' },
+          { '(Term Win ID: ' .. t.window .. ')', 'MoreMsg' },
+          { '(Term Buffer#: ' .. t.bufnr .. ')', 'MoreMsg' },
+          { '(Term id: ' .. t.id .. ')', 'MoreMsg' },
+          { '(Job ID: ' .. t.job_id .. ')', 'MoreMsg' },
+        }, true, {})
+      end
     end,
 
     -- INFO: on_close()

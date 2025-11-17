@@ -3,6 +3,7 @@ M.config = {
   lsp = 'ccls',
   menu_key = nil,
   menu_name = 'PlatformIO',
+  debug = false,
 
   menu_bindings = {
     { node = 'item', desc = '[L]ist terminals', shortcut = 'l', command = 'PioTermList' },
@@ -156,6 +157,7 @@ function M.setup(user_config)
       menu_key = true,
       menu_name = true,
       menu_bindings = true,
+      debug = true,
     }
     local err = false
     for key, value in pairs(user_config or {}) do

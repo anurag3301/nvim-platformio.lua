@@ -32,7 +32,6 @@ Install the plugin using lazy
 ```lua
 return {
   'anurag3301/nvim-platformio.lua',
-  -- cmd = { 'Pioinit', 'Piorun', 'Piocmdh', 'Piocmdf', 'Piolib', 'Piomon', 'Piodebug', 'Piodb' },
 
   -- optional: cond used to enable/disable platformio
   -- based on existance of platformio.ini file and .pio folder in cwd.
@@ -85,8 +84,9 @@ return {
 ### Configuration
 ```lua
 vim.g.pioConfig ={
-    lsp = 'clangd',
-    menu_key = '<leader>\\', -- replace this menu key  to your convenience
+  lsp = 'clangd',           -- value: clangd | ccls 
+  menu_key = '<leader>\\',  -- replace this menu key  to your convenience
+  debug = false             -- enable debug messages
 } 
 local pok, platformio = pcall(require, 'platformio')
 if pok then platformio.setup(vim.g.pioConfig) end

@@ -31,13 +31,27 @@ end, {
 })
 
 -- Piomon
+piolsserial.sync_ttylist()
 vim.api.nvim_create_user_command('Piomon', function(opts)
-  local args = opts.args
-  require('platformio.piomon').piomon { args }
+  local args = opts.fargs
+  require('platformio.piomon').piomon(args)
 end, {
-  nargs = '?',
-  complete = function(_, _, _)
-    return { '4800', '9600', '57600', '115200' }
+  nargs = '*',
+
+  complete = function(_, cmd_line)
+    local parts = vim.split(cmd_line, '%s+')
+    local BAUD = { '4800', '9600', '57600', '115200' }
+    local ports = {}
+    for _, item in ipairs(piolsserial.tty_list) do
+      table.insert(ports, item.port)
+    end
+    if #parts == 2 then
+      return BAUD
+    end
+    if #parts == 3 then
+      return ports
+    end
+    return {}
   end,
 })
 

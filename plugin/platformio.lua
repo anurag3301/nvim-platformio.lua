@@ -6,8 +6,8 @@
 -- +: At least one argument.
 -- -1: Zero or one argument (like ?, explicitly).
 
-local utils = require 'platformio.utils'
-local piolsserial = require 'platformio.piolsserial'
+local utils = require('platformio.utils')
+local piolsserial = require('platformio.piolsserial')
 
 -- Pioinit
 vim.api.nvim_create_user_command('Pioinit', function()

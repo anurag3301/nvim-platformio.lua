@@ -102,17 +102,19 @@ function M.gen_clangd_config()
 end
 
 function M.piolsp()
-  local command = 'pio project init --ide=vim'
-  local handle = io.popen(command, 'r')
-  local result = handle:read('*a')
-  handle:close()
-
-  if config.lsp == 'clangd' then
-    M.gen_clangd_config()
+  if config.lsp == 'clangd' and config.clangd_source == 'compiledb' then
+    utils.shell_cmd_blocking('pio run -t compiledb')
     gitignore_lsp_configs('compile_commands.json')
-    os.remove(vim.fs.joinpath(vim.g.platformioRootDir, '.ccls'))
   else
-    gitignore_lsp_configs('.ccls')
+    utils.shell_cmd_blocking('pio project init --ide=vim')
+
+    if config.lsp == 'clangd' then
+      M.gen_clangd_config()
+      gitignore_lsp_configs('compile_commands.json')
+      os.remove(vim.fs.joinpath(vim.g.platformioRootDir, '.ccls'))
+    else
+      gitignore_lsp_configs('.ccls')
+    end
   end
   vim.notify('LSP config generation completed!', vim.log.levels.INFO)
   vim.cmd('LspRestart')

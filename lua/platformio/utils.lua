@@ -7,7 +7,7 @@ M.extra = ' && echo . && echo . && echo Please Press ENTER to continue'
 
 function M.strsplit(inputstr, del)
   local t = {}
-  if type(inputstr) ~= "string" or type(inputstr) ~= "string" then
+  if type(inputstr) ~= 'string' or type(inputstr) ~= 'string' then
     return t
   end
   for str in string.gmatch(inputstr, '([^' .. del .. ']+)') do
@@ -212,7 +212,7 @@ function M.ToggleTerminal(command, direction, resetLSP)
       end, { desc = 'PioTermClose', buffer = t.bufnr })
 
       if config.debug then
-      local name_splt = M.strsplit(t.display_name, ':')
+        local name_splt = M.strsplit(t.display_name, ':')
         vim.api.nvim_echo({
           { 'ToggleTerm ', 'MoreMsg' },
           { '(Term name: ' .. name_splt[1] .. ')', 'MoreMsg' },
@@ -372,6 +372,18 @@ function M.async_shell_cmd(cmd, callback)
       callback(output, code)
     end,
   })
+end
+
+function M.shell_cmd_blocking(command)
+  local handle = io.popen(command, 'r')
+  if not handle then
+    return nil, 'failed to run command'
+  end
+
+  local result = handle:read('*a')
+  handle:close()
+
+  return result
 end
 
 return M

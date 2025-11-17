@@ -4,6 +4,7 @@ M.config = {
   menu_key = nil,
   menu_name = 'PlatformIO',
   debug = false,
+  clangd_source = 'ccls',
 
   menu_bindings = {
     { node = 'item', desc = '[L]ist terminals', shortcut = 'l', command = 'PioTermList' },
@@ -158,6 +159,7 @@ function M.setup(user_config)
       menu_name = true,
       menu_bindings = true,
       debug = true,
+      clangd_source = true,
     }
     local err = false
     for key, value in pairs(user_config or {}) do
@@ -174,6 +176,16 @@ function M.setup(user_config)
         {}
       )
       user_config.lsp = M.config.lsp
+    end
+    if user_config.lsp == 'clangd' then
+      if user_config.clangd_source ~= 'ccls' and user_config.clangd_source ~= 'compiledb' then
+        vim.api.nvim_echo(
+          { { 'Invalid clangd source {allowed "ccls" or "compiledb"} (default "' .. M.config.clangd_source .. '" will be used)', 'ErrorMsg' } },
+          true,
+          {}
+        )
+        user_config.clangd_source = M.config.clangd_source
+      end
     end
 
     if not err then -- if no error, merge user_config to M.config

@@ -6,6 +6,9 @@
 -- +: At least one argument.
 -- -1: Zero or one argument (like ?, explicitly).
 
+local utils = require 'platformio.utils'
+local piolsserial = require 'platformio.piolsserial'
+
 -- Pioinit
 vim.api.nvim_create_user_command('Pioinit', function()
   require('platformio.pioinit').pioinit()
@@ -37,6 +40,11 @@ end, {
     return { '4800', '9600', '57600', '115200' }
   end,
 })
+
+-- Piolsserial
+vim.api.nvim_create_user_command('Piolsserial', function()
+  require('platformio.piolsserial').print_tty_list()
+end, {})
 
 -- Piolib
 vim.api.nvim_create_user_command('Piolib', function(opts)

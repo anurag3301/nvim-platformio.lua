@@ -4,6 +4,7 @@
 :Piocmdf 	platformio.txt	/*:Piocmdf*
 :Piocmdh 	platformio.txt	/*:Piocmdh*
 :Piomon 	platformio.txt	/*:Piomon*
+:Piolsserial 	platformio.txt	/*:Piolsserial*
 :PioTermList 	platformio.txt	/*:PiomTermList*
 PlatfromIO	platformio.txt	/*PlatfromIO*
 platformio-usage	platformio.txt	/*platformio-usage*

@@ -58,6 +58,10 @@ USAGE                                                    *platformio-usage*
                             `:Piomon`
                             `:Piomon 115200`
 
+                                   *:Piolsserial*
+:Piolsserial		List out all the serial devices connected with their
+			description
+
                                    *:Piodebug*
 :Pidebug		 Starts the default PlatformIO debugger with gdb
 

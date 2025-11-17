@@ -337,4 +337,27 @@ function M.pio_install_check()
   return true
 end
 
+function M.async_shell_cmd(cmd, callback)
+  local output = {}
+
+  vim.fn.jobstart(cmd, {
+    stdout_buffered = true,
+    stderr_buffered = false,
+
+    on_stdout = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          if line ~= '' then
+            table.insert(output, line)
+          end
+        end
+      end
+    end,
+
+    on_exit = function(_, code)
+      callback(output, code)
+    end,
+  })
+end
+
 return M

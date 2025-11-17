@@ -147,6 +147,18 @@ function M.ToggleTerminal(command, direction, resetLSP)
     pioOpts.display_name = 'piomon:' .. orig_window
   else -- INFO: if previous cli terminal already opened ==> reopen
     if prev.cli then
+      prev.cli.on_close = function(t)
+        local ow = tonumber(M.strsplit(t.display_name, ':')[2])
+        if ow and vim.api.nvim_win_is_valid(ow) then
+          vim.api.nvim_set_current_win(ow)
+        else
+          vim.api.nvim_set_current_win(0)
+        end
+        if resetLSP then
+          vim.cmd(':PioLSP')
+        end
+      end
+
       local win_type = vim.fn.win_gettype(prev.cli.window)
       local win_open = win_type == '' or win_type == 'popup'
       if prev.cli.window and (win_open and vim.api.nvim_win_get_buf(prev.cli.window) == prev.cli.bufnr) then

@@ -6,23 +6,25 @@
 -- +: At least one argument.
 -- -1: Zero or one argument (like ?, explicitly).
 
-local utils = require 'platformio.utils'
-local piolsserial = require 'platformio.piolsserial'
+local utils = require('platformio.utils')
+local piolsserial = require('platformio.piolsserial')
 
 -- Pioinit
 vim.api.nvim_create_user_command('Pioinit', function()
   require('platformio.pioinit').pioinit()
-end, {force = true})
+end, { force = true })
 
--- Piodb
-vim.api.nvim_create_user_command('Piodb', function()
-  require('platformio.piodb').piodb()
+-- Piolsp
+vim.api.nvim_create_user_command('PioLSP', function()
+  vim.schedule(function()
+    require('platformio.piolsp').piolsp()
+  end)
 end, {})
 
 -- Piorun
 vim.api.nvim_create_user_command('Piorun', function(opts)
   local args = opts.args
-  require('platformio.piorun').piorun { args }
+  require('platformio.piorun').piorun({ args })
 end, {
   nargs = '?',
   complete = function(_, _, _)
@@ -95,22 +97,22 @@ end, {})
 -- INFO: List ToggleTerminals
 vim.api.nvim_create_user_command('PioTermList', function()
   local telescope = require('telescope')
-  telescope.setup {
+  telescope.setup({
     extensions = {
       ['ui-select'] = {
         require('telescope.themes').get_dropdown({
           borderchars = {
-            prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
-            results = { " ", " ", " ", " ", " ", " ", " ", " " },
-            preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+            prompt = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+            results = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+            preview = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
           },
-          prompt_position = "top", -- "top" or "bottom"
-          prompt_prefix = "🔍 ", -- Prompt prefix
-          selection_caret = "❯ ", -- Selection indicator
-          entry_prefix = "  ", -- Entry prefix
-          initial_mode = "insert", -- "insert" or "normal"
-          scroll_strategy = "cycle", -- "cycle" or "limit"
-          sorting_strategy = "ascending", -- "ascending" or "descending"
+          prompt_position = 'top', -- "top" or "bottom"
+          prompt_prefix = '🔍 ', -- Prompt prefix
+          selection_caret = '❯ ', -- Selection indicator
+          entry_prefix = '  ', -- Entry prefix
+          initial_mode = 'insert', -- "insert" or "normal"
+          scroll_strategy = 'cycle', -- "cycle" or "limit"
+          sorting_strategy = 'ascending', -- "ascending" or "descending"
           color_devicons = true, -- Color file icons
           use_less = true, -- Use less for preview
           -- prompt_prefix = " ",
@@ -119,9 +121,9 @@ vim.api.nvim_create_user_command('PioTermList', function()
         }),
       },
     },
-  }
+  })
   telescope.load_extension('ui-select')
-  local utils = require 'platformio.utils'
+  local utils = require('platformio.utils')
   local toggleterm_list = {}
 
   local terms = require('toggleterm.terminal').get_all(true)
@@ -142,29 +144,29 @@ vim.api.nvim_create_user_command('PioTermList', function()
     return
   end
 
-  vim.ui.select(
-    toggleterm_list,
-    {
-      prompt = 'Select a PIO terminal window:',
-      format_item = function(item)
-        return string.format("%d:%s (hidden: %s)",
-          item.term.id,
-          item.termtype,
-          vim.api.nvim_buf_is_loaded(item.term.bufnr) and (vim.fn.bufwinid(item.term.bufnr) == -1))
-      end,
-      kind = 'PioTerminals',
-    }, function(chosen, _)
-      if chosen then
-        local win_type = vim.fn.win_gettype(chosen.term.window)
-        local win_open = win_type == '' or win_type == 'popup'
-        if chosen.term.window and (win_open and vim.api.nvim_win_get_buf(chosen.term.window) == chosen.term.bufnr) then
-          vim.api.nvim_set_current_win(chosen.term.window)
-        else
-          chosen.term:open()
-        end
-        vim.api.nvim_echo({ { 'Switched to PIO terminal: ' .. chosen.termtype, 'Normal' } }, true, {})
+  vim.ui.select(toggleterm_list, {
+    prompt = 'Select a PIO terminal window:',
+    format_item = function(item)
+      return string.format(
+        '%d:%s (hidden: %s)',
+        item.term.id,
+        item.termtype,
+        vim.api.nvim_buf_is_loaded(item.term.bufnr) and (vim.fn.bufwinid(item.term.bufnr) == -1)
+      )
+    end,
+    kind = 'PioTerminals',
+  }, function(chosen, _)
+    if chosen then
+      local win_type = vim.fn.win_gettype(chosen.term.window)
+      local win_open = win_type == '' or win_type == 'popup'
+      if chosen.term.window and (win_open and vim.api.nvim_win_get_buf(chosen.term.window) == chosen.term.bufnr) then
+        vim.api.nvim_set_current_win(chosen.term.window)
       else
-        vim.api.nvim_echo({ { 'No PIO terminal window selected.', 'Normal' } }, true, {})
+        chosen.term:open()
       end
-    end)
+      vim.api.nvim_echo({ { 'Switched to PIO terminal: ' .. chosen.termtype, 'Normal' } }, true, {})
+    else
+      vim.api.nvim_echo({ { 'No PIO terminal window selected.', 'Normal' } }, true, {})
+    end
+  end)
 end, {})

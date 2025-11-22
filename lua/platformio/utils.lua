@@ -1,17 +1,23 @@
 local M = {}
 
+local config = require('platformio').config
+
 -- M.extra = 'printf \'\\\\n\\\\033[0;33mPlease Press ENTER to continue \\\\033[0m\'; read'
 M.extra = ' && echo . && echo . && echo Please Press ENTER to continue'
 
 function M.strsplit(inputstr, del)
   local t = {}
-  if type(inputstr) ~= "string" or type(inputstr) ~= "string" then
+  if type(inputstr) ~= 'string' or type(inputstr) ~= 'string' then
     return t
   end
   for str in string.gmatch(inputstr, '([^' .. del .. ']+)') do
     table.insert(t, str)
   end
   return t
+end
+
+function M.check_prefix(str, prefix)
+  return str:sub(1, #prefix) == prefix
 end
 
 local function pathmul(n)
@@ -39,9 +45,9 @@ end
 local function getPreviousWindow(orig_window)
   local prev = {
     orig_window = orig_window,
-    term = nil,    --active terminal
-    cli = nil,     --cli terminal
-    mon = nil,     --mon terminal
+    term = nil, --active terminal
+    cli = nil, --cli terminal
+    mon = nil, --mon terminal
     float = false, --is active terminal direction float
   }
   local terms = require('toggleterm.terminal').get_all(true)
@@ -80,7 +86,7 @@ local function send(term, cmd)
   vim.fn.chansend(term.job_id, cmd .. M.enter())
   if vim.api.nvim_buf_is_loaded(term.bufnr) and vim.api.nvim_buf_is_valid(term.bufnr) then
     if term.window and vim.api.nvim_win_is_valid(term.window) then --vim.ui.term_has_open_win(term) then
-      vim.api.nvim_set_current_win(term.window)                    -- terminal focus
+      vim.api.nvim_set_current_win(term.window) -- terminal focus
       vim.api.nvim_buf_call(term.bufnr, function()
         local mode = vim.api.nvim_get_mode().mode
         if mode == 'n' or mode == 'nt' then
@@ -108,7 +114,11 @@ end
 
 ------------------------------------------------------
 -- INFO: ToggleTerminal
-function M.ToggleTerminal(command, direction)
+function M.ToggleTerminal(command, direction, resetLSP)
+  if resetLSP == nil then
+    resetLSP = false
+  end
+
   local status_ok, _ = pcall(require, 'toggleterm')
   if not status_ok then
     vim.api.nvim_echo({ { 'toggleterm not found!', 'ErrorMsg' } }, true, {})
@@ -137,6 +147,18 @@ function M.ToggleTerminal(command, direction)
     pioOpts.display_name = 'piomon:' .. orig_window
   else -- INFO: if previous cli terminal already opened ==> reopen
     if prev.cli then
+      prev.cli.on_close = function(t)
+        local ow = tonumber(M.strsplit(t.display_name, ':')[2])
+        if ow and vim.api.nvim_win_is_valid(ow) then
+          vim.api.nvim_set_current_win(ow)
+        else
+          vim.api.nvim_set_current_win(0)
+        end
+        if resetLSP then
+          vim.cmd(':PioLSP')
+        end
+      end
+
       local win_type = vim.fn.win_gettype(prev.cli.window)
       local win_open = win_type == '' or win_type == 'popup'
       if prev.cli.window and (win_open and vim.api.nvim_win_get_buf(prev.cli.window) == prev.cli.bufnr) then
@@ -201,16 +223,18 @@ function M.ToggleTerminal(command, direction)
         PioTermClose(t)
       end, { desc = 'PioTermClose', buffer = t.bufnr })
 
-      local name_splt = M.strsplit(t.display_name, ':')
-      vim.api.nvim_echo({
-        { 'ToggleTerm ',                           'MoreMsg' },
-        { '(Term name: ' .. name_splt[1] .. ')',   'MoreMsg' },
-        { '(Prev win ID: ' .. name_splt[2] .. ')', 'MoreMsg' },
-        { '(Term Win ID: ' .. t.window .. ')',     'MoreMsg' },
-        { '(Term Buffer#: ' .. t.bufnr .. ')',     'MoreMsg' },
-        { '(Term id: ' .. t.id .. ')',             'MoreMsg' },
-        { '(Job ID: ' .. t.job_id .. ')',          'MoreMsg' },
-      }, true, {})
+      if config.debug then
+        local name_splt = M.strsplit(t.display_name, ':')
+        vim.api.nvim_echo({
+          { 'ToggleTerm ', 'MoreMsg' },
+          { '(Term name: ' .. name_splt[1] .. ')', 'MoreMsg' },
+          { '(Prev win ID: ' .. name_splt[2] .. ')', 'MoreMsg' },
+          { '(Term Win ID: ' .. t.window .. ')', 'MoreMsg' },
+          { '(Term Buffer#: ' .. t.bufnr .. ')', 'MoreMsg' },
+          { '(Term id: ' .. t.id .. ')', 'MoreMsg' },
+          { '(Job ID: ' .. t.job_id .. ')', 'MoreMsg' },
+        }, true, {})
+      end
     end,
 
     -- INFO: on_close()
@@ -221,6 +245,9 @@ function M.ToggleTerminal(command, direction)
         vim.api.nvim_set_current_win(orig_window)
       else
         vim.api.nvim_set_current_win(0)
+      end
+      if resetLSP then
+        vim.cmd(':PioLSP')
       end
     end,
 
@@ -317,16 +344,15 @@ function M.get_pioini_path()
 end
 
 function M.cd_pioini()
-  if(vim.g.platformioRootDir ~= nil) then
+  if vim.g.platformioRootDir ~= nil then
     vim.cmd('cd ' .. vim.g.platformioRootDir)
-	else
-	  vim.cmd('cd ' .. M.get_pioini_path())
-	end
+  else
+    vim.cmd('cd ' .. M.get_pioini_path())
+  end
 end
 
 function M.pio_install_check()
-  local handel = (jit.os == 'Windows') and assert(io.popen('where.exe pio 2>./nul')) or
-  assert(io.popen('which pio 2>/dev/null'))
+  local handel = (jit.os == 'Windows') and assert(io.popen('where.exe pio 2>./nul')) or assert(io.popen('which pio 2>/dev/null'))
   local pio_path = assert(handel:read('*a'))
   handel:close()
 
@@ -358,6 +384,18 @@ function M.async_shell_cmd(cmd, callback)
       callback(output, code)
     end,
   })
+end
+
+function M.shell_cmd_blocking(command)
+  local handle = io.popen(command, 'r')
+  if not handle then
+    return nil, 'failed to run command'
+  end
+
+  local result = handle:read('*a')
+  handle:close()
+
+  return result
 end
 
 return M

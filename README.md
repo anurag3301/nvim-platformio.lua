@@ -9,7 +9,11 @@ PlatformIO wrapper for Neovim written in Lua.</p>
 
 ### Demo
 
-https://github.com/anurag3301/nvim-platformio.lua/assets/52702259/528a2bbf-5a0e-4fa8-87e8-026ce47eef9d
+
+
+https://github.com/user-attachments/assets/6ed6546a-dd0e-4ee6-818e-a4407dcb3a38
+
+
 
 <br>
 
@@ -32,7 +36,6 @@ Install the plugin using lazy
 ```lua
 return {
   'anurag3301/nvim-platformio.lua',
-  -- cmd = { 'Pioinit', 'Piorun', 'Piocmdh', 'Piocmdf', 'Piolib', 'Piomon', 'Piodebug', 'Piodb' },
 
   -- optional: cond used to enable/disable platformio
   -- based on existance of platformio.ini file and .pio folder in cwd.
@@ -56,6 +59,7 @@ return {
               require('lazy').load({ plugins = { 'nvim-platformio.lua' } })
             elseif args.match == 'LazyLoad' then
               vim.notify('PlatformIO loaded', vim.log.levels.INFO, { title = 'PlatformIO' })
+              require("platformio").setup(vim.g.pioConfig)
               vim.cmd('Pioinit')
             end
           end,
@@ -74,6 +78,7 @@ return {
     { 'nvim-telescope/telescope-ui-select.nvim' },
     { 'nvim-lua/plenary.nvim' },
     { 'folke/which-key.nvim' },
+    { 'nvim-treesitter/nvim-treesitter' }
   },
 }
 ```
@@ -82,13 +87,14 @@ return {
 
 ### Configuration
 ```lua
-    local pok, platformio = pcall(require, 'platformio')
-    if pok then
-      platformio.setup({
-        lsp = 'clangd',
-        menu_key = '<leader>\\', -- replace this menu key  to your convenience
-      })
-    end
+vim.g.pioConfig ={
+  lsp = 'clangd',           -- value: clangd | ccls 
+  menu_key = '<leader>\\',  -- replace this menu key  to your convenience
+  debug = false             -- enable debug messages
+  clangd_source = 'ccls'    -- value: ccls | compiledb, For detailed explation check :help platformio-clangd_source
+} 
+local pok, platformio = pcall(require, 'platformio')
+if pok then platformio.setup(vim.g.pioConfig) end
 ```
 
 ### Keybinds

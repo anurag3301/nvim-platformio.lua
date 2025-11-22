@@ -129,7 +129,7 @@ vim.api.nvim_create_user_command('PioTermList', function()
   local terms = require('toggleterm.terminal').get_all(true)
   if #terms ~= 0 then
     for i = 1, #terms do
-      if terms[i].display_name:find('pio', 1) then
+      if terms[i].display_name and terms[i].display_name ~= '' and terms[i].display_name:find('pio', 1) then
         local termtype = utils.strsplit(terms[i].display_name, ':')[1]
         table.insert(toggleterm_list, {
           term = terms[i],

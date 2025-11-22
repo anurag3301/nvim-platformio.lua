@@ -7,11 +7,10 @@ M.extra = ' && echo . && echo . && echo Please Press ENTER to continue'
 
 function M.strsplit(inputstr, del)
   local t = {}
-  if type(inputstr) ~= 'string' or type(inputstr) ~= 'string' then
-    return t
-  end
-  for str in string.gmatch(inputstr, '([^' .. del .. ']+)') do
-    table.insert(t, str)
+  if type(inputstr) == 'string' and inputstr and inputstr ~= '' then
+    for str in string.gmatch(inputstr, '([^' .. del .. ']+)') do
+      table.insert(t, str)
+    end
   end
   return t
 end
@@ -53,26 +52,28 @@ local function getPreviousWindow(orig_window)
   local terms = require('toggleterm.terminal').get_all(true)
   if #terms ~= 0 then
     for i = 1, #terms do
-      local name_splt = M.strsplit(terms[i].display_name, ':')
-      if name_splt[1] == 'piocli' then
-        prev.cli = terms[i]
-        if terms[i].window == orig_window then
-          ---@diagnostic disable-next-line: cast-local-type
-          prev.orig_window = tonumber(name_splt[2]) -- set orig_window to the previous terminal onrig_window
-          prev.term = terms[i]
-        end
-        if terms[i].direction == 'float' then
-          prev.float = true
-        end
-      elseif name_splt[1] == 'piomon' then
-        prev.mon = terms[i]
-        if terms[i].window == orig_window then
-          ---@diagnostic disable-next-line: cast-local-type
-          prev.orig_window = tonumber(name_splt[2]) -- set orig_window to the previous terminal onrig_window
-          prev.term = terms[i]
-        end
-        if terms[i].direction == 'float' then
-          prev.float = true
+      if terms[i].display_name and terms[i].display_name ~= '' and terms[i].display_name:find('pio', 1) then
+        local name_splt = M.strsplit(terms[i].display_name, ':')
+        if name_splt[1] == 'piocli' then
+          prev.cli = terms[i]
+          if terms[i].window == orig_window then
+            ---@diagnostic disable-next-line: cast-local-type
+            prev.orig_window = tonumber(name_splt[2]) -- set orig_window to the previous terminal onrig_window
+            prev.term = terms[i]
+          end
+          if terms[i].direction == 'float' then
+            prev.float = true
+          end
+        elseif name_splt[1] == 'piomon' then
+          prev.mon = terms[i]
+          if terms[i].window == orig_window then
+            ---@diagnostic disable-next-line: cast-local-type
+            prev.orig_window = tonumber(name_splt[2]) -- set orig_window to the previous terminal onrig_window
+            prev.term = terms[i]
+          end
+          if terms[i].direction == 'float' then
+            prev.float = true
+          end
         end
       end
     end

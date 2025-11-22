@@ -11,7 +11,7 @@ PlatformIO wrapper for Neovim written in Lua.</p>
 
 
 
-https://github.com/user-attachments/assets/6ed6546a-dd0e-4ee6-818e-a4407dcb3a38
+https://github.com/user-attachments/assets/fdbb6655-4b2d-4a2b-81d1-fd8af6e7d9f1
 
 
 

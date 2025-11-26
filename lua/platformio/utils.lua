@@ -115,9 +115,9 @@ end
 
 ------------------------------------------------------
 -- INFO: ToggleTerminal
-function M.ToggleTerminal(command, direction, resetLSP)
-  if resetLSP == nil then
-    resetLSP = false
+function M.ToggleTerminal(command, direction, exit_callback)
+  if type(exit_callback) ~= 'function' then
+    exit_callback = function() end
   end
 
   local status_ok, _ = pcall(require, 'toggleterm')
@@ -237,9 +237,7 @@ function M.ToggleTerminal(command, direction, resetLSP)
       else
         vim.api.nvim_set_current_win(0)
       end
-      if resetLSP then
-        vim.cmd(':PioLSP')
-      end
+      exit_callback()
     end,
 
     -- INFO: on_create() {

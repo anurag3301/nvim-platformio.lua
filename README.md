@@ -1,11 +1,9 @@
 <h1 align="center">
+    <img src="https://github.com/user-attachments/assets/fa3f7663-802e-4845-b4f7-0992e34899f2" style="height: 1em; vertical-align: bottom;">
     nvim-platformio.lua
 </h1>
 
-<p align="center">
-
-<img src="https://github.com/user-attachments/assets/fa3f7663-802e-4845-b4f7-0992e34899f2" style="height: 1em; vertical-align: middle;">
-PlatformIO wrapper for Neovim written in Lua.</p>
+<p align="center"> PlatformIO wrapper for Neovim written in Lua.</p>
 
 ### Demo
 

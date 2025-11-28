@@ -62,8 +62,16 @@ USAGE                                                    *platformio-usage*
 :Piolsserial		List out all the serial devices connected with their
 			description
 
+                                   *:PioLSP*
+:PioLSP			Generates LSP config and restart the LSP connection.
+			It is based on your configuration. If `ccls` is
+			picked it generates the `.ccls` file and if `clangd`
+			is picked it generates `compile_commands.json` file.
+			This command can be used in a fresh cloned project
+			which doesnt have LSP configs. 
+
                                    *:Piodebug*
-:Pidebug		 Starts the default PlatformIO debugger with gdb
+:Piodebug		 Starts the default PlatformIO debugger with gdb
 
                                    *:PioTermList
 :PioTermList             You can see a list of pio terminals using :PioTermList

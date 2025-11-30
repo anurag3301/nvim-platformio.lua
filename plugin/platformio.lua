@@ -123,7 +123,6 @@ vim.api.nvim_create_user_command('PioTermList', function()
     },
   })
   telescope.load_extension('ui-select')
-  local utils = require('platformio.utils')
   local toggleterm_list = {}
 
   local terms = require('toggleterm.terminal').get_all(true)
@@ -157,6 +156,7 @@ vim.api.nvim_create_user_command('PioTermList', function()
     kind = 'PioTerminals',
   }, function(chosen, _)
     if chosen then
+      chosen.term.display_name = chosen.termtype .. ':' .. vim.api.nvim_get_current_win()
       local win_type = vim.fn.win_gettype(chosen.term.window)
       local win_open = win_type == '' or win_type == 'popup'
       if chosen.term.window and (win_open and vim.api.nvim_win_get_buf(chosen.term.window) == chosen.term.bufnr) then

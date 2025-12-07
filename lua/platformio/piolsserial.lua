@@ -16,10 +16,16 @@ function M.parse_tty(lines)
 end
 
 function M.sync_ttylist()
+  if not utils.pio_install_check() then
+    return
+  end
   utils.async_shell_cmd({ 'platformio', 'device', 'list', '--json-output' }, M.parse_tty)
 end
 
 function M.sync_ttylist_await()
+  if not utils.pio_install_check() then
+    return
+  end
   local done = false
   local result = nil
 

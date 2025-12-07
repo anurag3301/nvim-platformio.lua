@@ -56,6 +56,8 @@ return {
             if args.match == 'LazyRestore' then
               require('lazy').load({ plugins = { 'nvim-platformio.lua' } })
             elseif args.match == 'LazyLoad' then
+              local pio_install_status = require('platformio.utils').pio_install_check()
+              if not pio_install_status then return end
               vim.notify('PlatformIO loaded', vim.log.levels.INFO, { title = 'PlatformIO' })
               require("platformio").setup(vim.g.pioConfig)
               vim.cmd('Pioinit')

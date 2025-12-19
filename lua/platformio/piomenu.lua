@@ -30,9 +30,6 @@ function M.piomenu(config)
     return
   end
 
-  wk.setup({
-    preset = 'helix', --'modern', --'classic'
-  })
   local Config = require('which-key.config')
   Config.sort = { 'order', 'group', 'manual', 'mod' }
 

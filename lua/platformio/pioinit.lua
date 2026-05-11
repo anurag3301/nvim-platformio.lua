@@ -51,16 +51,16 @@ local function pick_framework(board_details)
     .new(opts, {
       prompt_title = 'frameworks',
       finder = finders.new_table({
-        results = vim.list_extend({"none"}, board_details['frameworks']),
+        results = vim.list_extend({ 'none' }, board_details['frameworks']),
       }),
       attach_mappings = function(prompt_bufnr, _)
         actions.select_default:replace(function()
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           local selected_framework = selection[1]
-	  if selected_framework == "none" then
-		  selected_framework = ""
-	  end
+          if selected_framework == 'none' then
+            selected_framework = ''
+          end
           local command = 'pio project init --board ' .. board_details['id'] .. ' --project-option "framework=' .. selected_framework .. '"'
           -- .. utils.extra
           utils.ToggleTerminal(command, 'float', function()

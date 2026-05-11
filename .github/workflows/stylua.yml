@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Check formatting
         id: check
-        uses: JohnnyMorganz/stylua-action@v4
         continue-on-error: true
+        uses: JohnnyMorganz/stylua-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: latest
@@ -34,7 +34,7 @@ jobs:
           version: latest
           args: .
 
-      - name: Commit changes
+      - name: Commit formatting changes
         if: steps.check.outcome == 'failure'
         run: |
           git config --global user.name "github-actions[bot]"
@@ -45,6 +45,7 @@ jobs:
           git diff --cached --quiet || \
           git commit -m "style: auto format lua"
 
-      - name: Push changes
+      - name: Push formatting changes
         if: steps.check.outcome == 'failure'
-        run: git push
+        run: |
+          git push origin HEAD:${{ github.head_ref }}

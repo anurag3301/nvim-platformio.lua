@@ -402,11 +402,11 @@ function M.shell_cmd_blocking(command)
     return result
 end
 
--- TODO: understand how to execute command and fill in the corresponding table
+--- gets the os user data dir for windows or linux
+---@return string data_dir_path
 function M.get_os_user_data_dir()
     --- @type string
     local os_dirname, path_separator
-
     if is_windows then
         path_separator = '\\'
         os_dirname = 'LOCALAPPDATA'
@@ -415,6 +415,16 @@ function M.get_os_user_data_dir()
         os_dirname = 'XDG_STATE_HOME'
     end
     return os.getenv(os_dirname) .. path_separator .. 'nvim' .. path_separator .. 'nvim-platformio'
+end
+
+--- creates the user data dir conditionally, based on its existence.
+---@return string data_dir_path for performance
+function M.make_os_user_data_dir()
+    local data_dir_path = M.get_os_user_data_dir()
+    if not os.execute('test -d ' .. data_dir_path) then
+        os.execute('mkdir -p ' .. data_dir_path)
+    end
+    return data_dir_path
 end
 
 return M

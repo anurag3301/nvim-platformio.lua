@@ -421,10 +421,11 @@ end
 ---@return string data_dir_path for performance
 function M.make_os_user_data_dir()
     local data_dir_path = M.get_os_user_data_dir()
-    if os.execute('test -d ' .. data_dir_path) then
-        -- TODO: error handler
-        os.execute('mkdir -p ' .. data_dir_path)
+    local cmd = 'mkdir ' .. data_dir_path
+    if not is_windows then
+        cmd = cmd .. ' -p'
     end
+    os.execute(cmd)
     return data_dir_path
 end
 

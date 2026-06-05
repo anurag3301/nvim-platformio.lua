@@ -1,6 +1,8 @@
 local utils = require('platformio.utils')
 local picker = require('platformio.pickers')
-local M = {}
+local M = {
+    default_env = 'none',
+}
 
 function M.pioenv()
     --- @type vim.log.levels
@@ -55,10 +57,11 @@ function M.pioenv()
         _ = stdio_stream.read(stdio_stream, '*line')
     end
 
+    table.insert(envs, 'none')
     io.close(stdio_stream)
     -- TODO: execute picker
     picker.pick_env(envs, function(selected_env)
-        vim.notify(selected_env, loglevel)
+        M.default_env = selected_env
     end)
 end
 

@@ -65,4 +65,40 @@ function M.pioenv()
     end)
 end
 
+--- function to use for other modules to get the env flag
+---@return string env_flag either an empty string, or a string with the flag
+function M.get_flag()
+    if M.default_env ~= 'none' then
+        return ' -e ' .. M.default_env
+    end
+    return ''
+end
+
+--- function to determine if a pio-command accepts the env flag
+---@param cmd string name of command that will be run
+---@return boolean accepts_flag is true if cmd accepts the env flag
+function M.command_accepts_flag(cmd)
+    local true_table = {
+        access = false,
+        account = false,
+        boards = false,
+        check = true,
+        ci = true,
+        debug = true,
+        device = false,
+        home = false,
+        org = false,
+        pkg = false,
+        project = false,
+        remote = false,
+        run = true,
+        setting = false,
+        system = false,
+        team = false,
+        test = true,
+        upgrade = false,
+    }
+    return true_table[cmd]
+end
+
 return M

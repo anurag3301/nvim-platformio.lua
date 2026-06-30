@@ -29,14 +29,14 @@ local function pathmul(n)
 end
 
 ------------------------------------------------------
-local is_windows = jit.os == 'Windows'
+M.is_windows = jit.os == 'Windows'
 
-M.devNul = is_windows and ' 2>./nul' or ' 2>/dev/null'
+M.devNul = M.is_windows and ' 2>./nul' or ' 2>/dev/null'
 
 -- INFO: get current OS enter
 function M.enter()
   local shell = vim.o.shell
-  if is_windows then
+  if M.is_windows then
     return vim.fn.executable('pwsh') and '\r' or '\r\n'
   elseif shell:find('nu') then
     return '\r'
@@ -407,7 +407,7 @@ end
 function M.get_os_user_data_dir()
   --- @type string
   local os_dirname, path_separator
-  if is_windows then
+  if M.is_windows then
     path_separator = '\\'
     os_dirname = 'LOCALAPPDATA'
   else
@@ -422,7 +422,7 @@ end
 function M.make_os_user_data_dir()
   local data_dir_path = M.get_os_user_data_dir()
   local cmd = 'mkdir ' .. data_dir_path
-  if not is_windows then
+  if not M.is_windows then
     cmd = cmd .. ' -p'
   end
   os.execute(cmd)

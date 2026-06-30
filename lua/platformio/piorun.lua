@@ -1,28 +1,29 @@
 local M = {}
 
 local utils = require('platformio.utils')
+local env = require('platformio.pioenv')
 
 function M.piobuild()
   utils.cd_pioini()
-  local command = 'pio run' -- .. utils.extra
+  local command = 'pio run' .. env.get_flag() -- .. utils.extra
   utils.ToggleTerminal(command, 'float')
 end
 
 function M.pioupload()
   utils.cd_pioini()
-  local command = 'pio run --target upload' -- .. utils.extra
+  local command = 'pio run --target upload' .. env.get_flag() -- .. utils.extra
   utils.ToggleTerminal(command, 'float')
 end
 
 function M.piouploadfs()
   utils.cd_pioini()
-  local command = 'pio run --target uploadfs' -- .. utils.extra
+  local command = 'pio run --target uploadfs' .. env.get_flag() -- .. utils.extra
   utils.ToggleTerminal(command, 'float')
 end
 
 function M.pioclean()
   utils.cd_pioini()
-  local command = 'pio run --target clean' -- .. utils.extra
+  local command = 'pio run --target clean' .. env.get_flag() -- .. utils.extra
   utils.ToggleTerminal(command, 'float')
 end
 

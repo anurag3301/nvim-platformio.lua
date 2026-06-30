@@ -117,6 +117,7 @@ function M.piolsp()
     if config.lsp == 'clangd' then
       M.gen_clangd_config()
       gitignore_lsp_configs('compile_commands.json')
+      -- TODO: check for file first
       os.remove(vim.fs.joinpath(vim.g.platformioRootDir, '.ccls'))
     else
       gitignore_lsp_configs('.ccls')

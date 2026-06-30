@@ -1,4 +1,5 @@
 local utils = require('platformio.utils')
+local env = require('platformio.pioenv')
 local M = {}
 
 function M.piocmd(cmd_table, direction)
@@ -14,6 +15,9 @@ function M.piocmd(cmd_table, direction)
     local cmd = 'pio '
     for _, v in pairs(cmd_table) do
       cmd = cmd .. ' ' .. v
+    end
+    if env.command_accepts_flag(cmd_table[1]) then
+      cmd = cmd .. env.get_flag()
     end
     utils.ToggleTerminal(cmd, direction)
   end

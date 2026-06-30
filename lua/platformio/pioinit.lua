@@ -36,21 +36,21 @@ function M.pioinit()
 
   -- Read stdout
   local command = 'pio boards --json-output'
-  local handel = io.popen(command .. utils.devNul)
-  if not handel then
+  local handle = io.popen(command .. utils.devNul)
+  if not handle then
     return
   end
-  local json_str = handel:read('*a')
-  handel:close()
+  local json_str = handle:read('*a')
+  handle:close()
 
   if #json_str == 0 then
     -- read stderr
-    handel = io.popen(command .. ' 2>&1')
-    if not handel then
+    handle = io.popen(command .. ' 2>&1')
+    if not handle then
       return
     end
-    local command_output = handel:read('*a')
-    handel:close()
+    local command_output = handle:read('*a')
+    handle:close()
     vim.notify('Some error occured while executing `' .. command .. "`', command output: \n", vim.log.levels.WARN)
     print(command_output)
     return

@@ -95,3 +95,7 @@ end, {})
 vim.api.nvim_create_user_command('PioTermList', function()
   require('platformio.piotermlist').piotermlist()
 end, {})
+
+vim.api.nvim_create_user_command('Pioenv', function()
+  require('platformio.pioenv').pioenv()
+end, {})

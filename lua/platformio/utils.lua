@@ -19,10 +19,6 @@ function M.check_prefix(str, prefix)
   return str:sub(1, #prefix) == prefix
 end
 
-local function pathmul(n)
-  return '..' .. string.rep('/..', n)
-end
-
 ------------------------------------------------------
 local is_windows = jit.os == 'Windows'
 
@@ -115,7 +111,7 @@ end
 
 ------------------------------------------------------
 -- INFO: ToggleTerminal
-function M.ToggleTerminal(command, direction, exit_callback)
+function M.ToggleTerminal(command, direction, exit_callback, working_dir)
   if type(exit_callback) ~= 'function' then
     exit_callback = function() end
   end
@@ -128,6 +124,8 @@ function M.ToggleTerminal(command, direction, exit_callback)
 
   local title = ''
   local pioOpts = {}
+
+  pioOpts.dir = working_dir or vim.fn.getcwd()
 
   -- INFO: set orig_window to current window, or if available get current toggleterm previous window
   local prev = getPreviousWindow(vim.api.nvim_get_current_win())
@@ -320,8 +318,6 @@ end
 
 ----------------------------------------------------------------------------------------
 
-local paths = { '.', '..', pathmul(1), pathmul(2), pathmul(3), pathmul(4), pathmul(5) }
-
 function M.file_exists(name)
   local f = io.open(name, 'r')
   if f ~= nil then
@@ -332,22 +328,22 @@ function M.file_exists(name)
   end
 end
 
-function M.set_platformioRootDir()
-  if vim.g.platformioRootDir ~= nil then
-    return
-  end
-  for _, path in pairs(paths) do
-    if M.file_exists(path .. '/platformio.ini') then
-      vim.g.platformioRootDir = path
-      return
+function M.get_platformioRootDir()
+  if vim.g.platformioRootDir == nil then
+    local path = vim.api.nvim_buf_get_name(0)
+    if path == '' then
+      path = vim.fn.getcwd()
+    end
+    local match = vim.fs.find({ 'platformio.ini' }, { upward = true, path = path })
+    if #match > 0 then
+      vim.g.platformioRootDir = vim.fs.dirname(match[1])
+    end
+
+    if vim.g.platformioRootDir == nil then
+      vim.notify('Could not find platformio.ini, run :Pioinit to create a new project', vim.log.levels.ERROR)
     end
   end
-  vim.notify('Could not find platformio.ini, run :Pioinit to create a new project', vim.log.levels.ERROR)
-end
-
-function M.cd_pioini()
-  M.set_platformioRootDir()
-  vim.cmd('cd ' .. vim.g.platformioRootDir)
+  return vim.g.platformioRootDir
 end
 
 function M.pio_install_check()
@@ -385,16 +381,32 @@ function M.async_shell_cmd(cmd, callback)
   })
 end
 
-function M.shell_cmd_blocking(command)
-  local handle = io.popen(command, 'r')
-  if not handle then
-    return nil, 'failed to run command'
+function M.shell_cmd_blocking(args, working_dir)
+  if vim.system then
+    local ok, res = pcall(function()
+      return vim.system(args, { cwd = working_dir, text = true }):wait()
+    end)
+    if not ok then
+      return nil, 'failed to spawn command: ' .. tostring(res)
+    end
+    return res.stdout
+  else
+    -- Fallback for Neovim < 0.10.0 using vim.fn.system
+    local cmd_str = table.concat(args, ' ')
+    local old_dir = nil
+    if working_dir then
+      old_dir = vim.fn.getcwd()
+      vim.cmd('cd ' .. vim.fn.fnameescape(working_dir))
+    end
+
+    local stdout = vim.fn.system(cmd_str)
+
+    if old_dir then
+      vim.cmd('cd ' .. vim.fn.fnameescape(old_dir))
+    end
+
+    return stdout
   end
-
-  local result = handle:read('*a')
-  handle:close()
-
-  return result
 end
 
 return M

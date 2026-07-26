@@ -6,8 +6,6 @@ function M.piomon(args_table)
     return
   end
 
-  utils.cd_pioini()
-
   local command = nil
   if #args_table == 0 then
     command = 'pio device monitor'
@@ -23,7 +21,7 @@ function M.piomon(args_table)
   if command == nil then
     vim.notify('Usage: Piomon <baud> <port>', vim.log.levels.ERROR)
   else
-    utils.ToggleTerminal(command, 'horizontal')
+    utils.ToggleTerminal(command, 'horizontal', nil, utils.get_platformioRootDir())
   end
 end
 

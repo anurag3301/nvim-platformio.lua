@@ -6,11 +6,9 @@ function M.piodebug(args_table)
     return
   end
 
-  utils.cd_pioini()
-
   local command = 'pio debug --interface=gdb -- -x .pioinit'
   -- local command = string.format('pio debug --interface=gdb -- -x .pioinit %s', utils.extra)
-  utils.ToggleTerminal(command, 'float')
+  utils.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
 end
 
 return M

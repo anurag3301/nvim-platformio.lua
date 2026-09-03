@@ -42,7 +42,7 @@ function M.piolib(lib_arg_list)
       local command = 'pio pkg install --library "' .. pkg_name .. '"'
       utils.ToggleTerminal(command, 'float', function()
         vim.cmd(':PioLSP')
-      end)
+      end, utils.get_platformioRootDir())
     end)
   else
     vim.notify(

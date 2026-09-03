@@ -106,13 +106,12 @@ function M.piolsp()
   if not utils.pio_install_check() then
     return
   end
-  utils.cd_pioini()
 
   if config.lsp == 'clangd' and config.clangd_source == 'compiledb' then
-    utils.shell_cmd_blocking('pio run -t compiledb')
+    utils.shell_cmd_blocking({ 'pio', 'run', '-t', 'compiledb' }, utils.get_platformioRootDir())
     gitignore_lsp_configs('compile_commands.json')
   else
-    utils.shell_cmd_blocking('pio project init --ide=vim')
+    utils.shell_cmd_blocking({ 'pio', 'project', 'init', '--ide=vim' }, utils.get_platformioRootDir())
 
     if config.lsp == 'clangd' then
       M.gen_clangd_config()

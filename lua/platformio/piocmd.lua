@@ -6,16 +6,14 @@ function M.piocmd(cmd_table, direction)
     return
   end
 
-  utils.cd_pioini()
-
   if cmd_table[1] == '' then
-    utils.ToggleTerminal('', direction)
+    utils.ToggleTerminal('', direction, nil, utils.get_platformioRootDir())
   else
     local cmd = 'pio '
     for _, v in pairs(cmd_table) do
       cmd = cmd .. ' ' .. v
     end
-    utils.ToggleTerminal(cmd, direction)
+    utils.ToggleTerminal(cmd, direction, nil, utils.get_platformioRootDir())
   end
 end
 

@@ -7,6 +7,9 @@ function M.parse_tty(lines)
   for k in pairs(M.tty_list) do
     M.tty_list[k] = nil
   end
+  if not lines[1] then
+    return
+  end
   local json_data = vim.json.decode(lines[1])
   for key, value in pairs(json_data) do
     if value['description'] ~= 'n/a' then

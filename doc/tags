@@ -1,4 +1,5 @@
 :PioLSP	platformio.txt	/*:PioLSP*
+:PioTermList	platformio.txt	/*:PioTermList*
 :Piocmd	platformio.txt	/*:Piocmd*
 :Piodebug	platformio.txt	/*:Piodebug*
 :Pioinit	platformio.txt	/*:Pioinit*
@@ -9,6 +10,11 @@
 PlatformIO	platformio.txt	/*PlatformIO*
 platformio-clangd_source	platformio.txt	/*platformio-clangd_source*
 platformio-configuration	platformio.txt	/*platformio-configuration*
+platformio-debug	platformio.txt	/*platformio-debug*
+platformio-lsp	platformio.txt	/*platformio-lsp*
+platformio-menu_bindings	platformio.txt	/*platformio-menu_bindings*
+platformio-menu_key	platformio.txt	/*platformio-menu_key*
+platformio-menu_name	platformio.txt	/*platformio-menu_name*
 platformio-picker	platformio.txt	/*platformio-picker*
 platformio-usage	platformio.txt	/*platformio-usage*
 platformio.lua	platformio.txt	/*platformio.lua*

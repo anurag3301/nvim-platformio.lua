@@ -19,6 +19,10 @@ function M.check_prefix(str, prefix)
   return str:sub(1, #prefix) == prefix
 end
 
+function M.sanitize_shell_arg(str)
+  return (str or ''):gsub('[^%w%.%-_/]', '')
+end
+
 ------------------------------------------------------
 M.is_windows = jit.os == 'Windows'
 

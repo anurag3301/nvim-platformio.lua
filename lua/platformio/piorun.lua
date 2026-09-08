@@ -1,25 +1,26 @@
 local M = {}
 
 local utils = require('platformio.utils')
+local terminal = require('platformio.terminal')
 
 function M.piobuild()
   local command = 'pio run' -- .. utils.extra
-  utils.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
+  terminal.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
 end
 
 function M.pioupload()
   local command = 'pio run --target upload' -- .. utils.extra
-  utils.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
+  terminal.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
 end
 
 function M.piouploadfs()
   local command = 'pio run --target uploadfs' -- .. utils.extra
-  utils.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
+  terminal.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
 end
 
 function M.pioclean()
   local command = 'pio run --target clean' -- .. utils.extra
-  utils.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
+  terminal.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
 end
 
 function M.piorun(arg_table)

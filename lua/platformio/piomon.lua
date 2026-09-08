@@ -1,4 +1,5 @@
 local utils = require('platformio.utils')
+local terminal = require('platformio.terminal')
 local M = {}
 
 function M.piomon(args_table)
@@ -21,7 +22,7 @@ function M.piomon(args_table)
   if command == nil then
     vim.notify('Usage: Piomon <baud> <port>', vim.log.levels.ERROR)
   else
-    utils.ToggleTerminal(command, 'horizontal', nil, utils.get_platformioRootDir())
+    terminal.ToggleTerminal(command, 'horizontal', nil, utils.get_platformioRootDir())
   end
 end
 

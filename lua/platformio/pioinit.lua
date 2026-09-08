@@ -1,6 +1,7 @@
 local M = {}
 
 local utils = require('platformio.utils')
+local terminal = require('platformio.terminal')
 local picker = require('platformio.pickers')
 local boilerplate_gen = require('platformio.boilerplate').boilerplate_gen
 
@@ -12,7 +13,7 @@ local function init_project(board_details, selected_framework)
   local board_id = utils.sanitize_shell_arg(board_details.id)
   local framework_arg = utils.sanitize_shell_arg(framework)
   local command = 'pio project init --board ' .. board_id .. ' --project-option "framework=' .. framework_arg .. '"'
-  utils.ToggleTerminal(command, 'float', function()
+  terminal.ToggleTerminal(command, 'float', function()
     vim.cmd(':PioLSP')
     boilerplate_gen(framework)
   end)

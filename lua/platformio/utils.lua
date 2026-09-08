@@ -20,14 +20,14 @@ function M.check_prefix(str, prefix)
 end
 
 ------------------------------------------------------
-local is_windows = jit.os == 'Windows'
+M.is_windows = jit.os == 'Windows'
 
-M.devNul = is_windows and ' 2>./nul' or ' 2>/dev/null'
+M.devNul = M.is_windows and ' 2>./nul' or ' 2>/dev/null'
 
 -- INFO: get current OS enter
 function M.enter()
   local shell = vim.o.shell
-  if is_windows then
+  if M.is_windows then
     return vim.fn.executable('pwsh') and '\r' or '\r\n'
   elseif shell:find('nu') then
     return '\r'

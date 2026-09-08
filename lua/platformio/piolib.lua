@@ -17,7 +17,7 @@ function M.piolib(lib_arg_list)
 
   local url = 'https://api.registry.platformio.org/v3/search'
   local res = curl.get(url, {
-    insecure = true,
+    insecure = utils.is_windows, -- Windows curl builds often lack a CA bundle, breaking TLS verification
     timeout = 20000,
     headers = { content_type = 'application/json' },
     query = {

@@ -224,7 +224,7 @@ These are the default keybindings, which you can override in your configuration.
 It's possible to lazy load the plugin using Lazy.nvim, this will load the plugins only when it is needed, to enable lazy loading, add this plugin spec to your config.
 
 ```lua
-cmd = { 'Pioinit', 'Piorun', 'Piocmdh', 'Piocmdf', 'Piolib', 'Piomon', 'Piodebug', 'Piodb' },
+cmd = { 'Pioinit', 'PioLSP', 'Piorun', 'Piocmdh', 'Piocmdf', 'Piolib', 'Piomon', 'Piolsserial', 'Piodebug', 'PioTermList' },
 ```
 
 

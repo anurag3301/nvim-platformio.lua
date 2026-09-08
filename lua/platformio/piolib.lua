@@ -2,6 +2,7 @@ local M = {}
 
 local curl = require('plenary.curl')
 local utils = require('platformio.utils')
+local terminal = require('platformio.terminal')
 local picker = require('platformio.pickers')
 
 function M.piolib(lib_arg_list)
@@ -40,7 +41,7 @@ function M.piolib(lib_arg_list)
       end
       local pkg_name = owner .. '/' .. name
       local command = 'pio pkg install --library "' .. pkg_name .. '"'
-      utils.ToggleTerminal(command, 'float', function()
+      terminal.ToggleTerminal(command, 'float', function()
         vim.cmd(':PioLSP')
       end, utils.get_platformioRootDir())
     end)

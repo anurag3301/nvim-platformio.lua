@@ -1,4 +1,5 @@
 local utils = require('platformio.utils')
+local terminal = require('platformio.terminal')
 local M = {}
 
 function M.piocmd(cmd_table, direction)
@@ -7,13 +8,13 @@ function M.piocmd(cmd_table, direction)
   end
 
   if cmd_table[1] == '' then
-    utils.ToggleTerminal('', direction, nil, utils.get_platformioRootDir())
+    terminal.ToggleTerminal('', direction, nil, utils.get_platformioRootDir())
   else
     local cmd = 'pio '
     for _, v in pairs(cmd_table) do
       cmd = cmd .. ' ' .. v
     end
-    utils.ToggleTerminal(cmd, direction, nil, utils.get_platformioRootDir())
+    terminal.ToggleTerminal(cmd, direction, nil, utils.get_platformioRootDir())
   end
 end
 

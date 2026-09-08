@@ -1,4 +1,5 @@
 local utils = require('platformio.utils')
+local terminal = require('platformio.terminal')
 local M = {}
 
 function M.piodebug(args_table)
@@ -8,7 +9,7 @@ function M.piodebug(args_table)
 
   local command = 'pio debug --interface=gdb -- -x .pioinit'
   -- local command = string.format('pio debug --interface=gdb -- -x .pioinit %s', utils.extra)
-  utils.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
+  terminal.ToggleTerminal(command, 'float', nil, utils.get_platformioRootDir())
 end
 
 return M

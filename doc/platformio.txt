@@ -130,16 +130,30 @@ picker_backend                                            *platformio-picker*
 
     Allowed values:
     - `auto`
-          Default. Tries Telescope backend first. If Telescope is unavailable,
-          falls back to `vim.ui.select` backend.
+          Default. Tries backends in this order, using the first one that is
+          installed: `telescope`, then `snacks`, then `mini_pick`, then
+          `ui_select`. `ui_select` is always available since it only needs
+          Neovim's built-in `vim.ui.select`, so `auto` never fails to find
+          a backend.
 
     - `telescope`
-          Force Telescope picker backend. If Telescope backend cannot be loaded,
-          plugin falls back to `vim.ui.select` as a safety fallback.
+          Force the Telescope picker backend (requires telescope.nvim).
+
+    - `snacks`
+          Force the Snacks picker backend (requires folke/snacks.nvim with
+          its `picker` module enabled).
+
+    - `mini_pick`
+          Force the mini.pick backend (requires nvim-mini/mini.pick).
 
     - `ui_select`
           Force `vim.ui.select` backend. This works with Neovim built-in
           `vim.ui.select` or any plugin that overrides it (for example,
-          telescope-ui-select, dressing.nvim, snacks picker adapters, etc.).
+          telescope-ui-select, dressing.nvim, snacks' `ui_select` option,
+          mini.pick's `MiniPick.ui_select`, etc.).
+
+    Unlike `auto`, explicitly requesting `telescope`, `snacks`, `mini_pick`,
+    or `ui_select` does NOT fall back to another backend if the requested
+    one isn't installed—it reports an error and the picker does not open.
 
 vim:tw=78:sw=4:ts=8:ft=help:norl:noet:

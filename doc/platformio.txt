@@ -21,12 +21,14 @@ USAGE                                                    *platformio-usage*
 
                                    *:Piorun*
 :Piorun [arg]            This command builds and uploads the code. Optional
-                         arguments: build, upload, clean. If no argument is
-                         provided, it defaults to build and upload.
+                         arguments: build, upload, uploadfs, clean. If no
+                         argument is provided, it defaults to build and
+                         upload.
                          Examples:
                             `:Piorun`
                             `:Piorun build`
                             `:Piorun upload`
+                            `:Piorun uploadfs`
                             `:Piorun clean`
 
                                    *:Piocmd*
@@ -51,12 +53,14 @@ USAGE                                                    *platformio-usage*
                             `:Piolib keyboard`
 
                                    *:Piomon*
-:Piomon [baud_rate]     Open a serial monitor. Specify a baud rate as an
-                         optional argument. If not provided, it uses the default
-                         baud rate (9600) or the one specified in platformio.ini.
+:Piomon [baud] [port]   Open a serial monitor. Specify a baud rate and,
+                         optionally, a port. If not provided, it uses the
+                         default baud rate (9600) or the one specified in
+                         platformio.ini, and auto-detects the port.
                          Examples:
                             `:Piomon`
                             `:Piomon 115200`
+                            `:Piomon 115200 /dev/ttyUSB0`
 
                                    *:Piolsserial*
 :Piolsserial		List out all the serial devices connected with their
@@ -73,9 +77,11 @@ USAGE                                                    *platformio-usage*
                                    *:Piodebug*
 :Piodebug		 Starts the default PlatformIO debugger with gdb
 
-                                   *:PioTermList
-:PioTermList             You can see a list of pio terminals using :PioTermList
-                         command in normal mode. It is mapped to <leader>pl
+                                   *:PioTermList*
+:PioTermList             Lists open PIO terminals (CLI and monitor) and lets
+                         you pick one to switch to. Not bound to any key by
+                         default; bind it yourself or add it to
+                         `menu_bindings` (see |platformio-configuration|).
 
 
 ==============================================================================
@@ -83,6 +89,11 @@ CONFIGURATION                                        *platformio-configuration*
 
 The plugin exposes a few configuration options that can be set in your
 `setup()` call.
+
+lsp                                                              *platformio-lsp*
+    Which language server the generated project config should target.
+    Allowed values: `ccls` (default) or `clangd`. See |platformio-clangd_source|
+    below when using `clangd`.
 
 clangd_source                                          *platformio-clangd_source*
     PlatformIO CLI officially only supports generating LSP configuration for
@@ -141,5 +152,25 @@ picker_backend                                            *platformio-picker*
           Force `vim.ui.select` backend. This works with Neovim built-in
           `vim.ui.select` or any plugin that overrides it (for example,
           telescope-ui-select, dressing.nvim, snacks picker adapters, etc.).
+
+menu_key                                                    *platformio-menu_key*
+    Key prefix that opens the PlatformIO which-key menu (requires
+    folke/which-key.nvim). Unset (`nil`) by default, which disables the menu
+    entirely. Example: `menu_key = '<leader>\\'`.
+
+menu_name                                                  *platformio-menu_name*
+    Display name for the top-level menu group shown by which-key.
+    Default: `'PlatformIO'`.
+
+menu_bindings                                          *platformio-menu_bindings*
+    Table describing the which-key menu tree: nested `menu` nodes (with
+    `desc`, `shortcut`, `items`) and `item` nodes (with `desc`, `shortcut`,
+    `command`). See the README for the full default table, which you can
+    copy and edit. Note that a partial table does not selectively override
+    individual default entries — provide the whole tree if you customize it.
+
+debug                                                          *platformio-debug*
+    When `true`, echoes extra diagnostic info (terminal name, window/buffer
+    ids, job id) each time a PIO terminal opens. Default: `false`.
 
 vim:tw=78:sw=4:ts=8:ft=help:norl:noet:

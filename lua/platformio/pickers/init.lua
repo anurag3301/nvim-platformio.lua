@@ -21,6 +21,10 @@ local function get_backend()
     return load_backend('snacks') or load_backend('ui_select')
   end
 
+  if backend_name == 'mini_pick' then
+    return load_backend('mini_pick') or load_backend('ui_select')
+  end
+
   if backend_name == 'ui_select' then
     return load_backend('ui_select')
   end

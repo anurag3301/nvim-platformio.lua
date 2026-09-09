@@ -193,6 +193,7 @@ function M.setup(user_config)
       auto = true,
       telescope = true,
       snacks = true,
+      mini_pick = true,
       ui_select = true,
     }
     if user_config.picker_backend and not valid_picker_backends[user_config.picker_backend] then

@@ -197,18 +197,14 @@ function M.setup(user_config)
       ui_select = true,
     }
     if user_config.picker_backend and not valid_picker_backends[user_config.picker_backend] then
-      vim.api.nvim_echo(
+      vim.api.nvim_echo({
         {
-          {
-            'Invalid picker backend {allowed "auto", "telescope", "snacks", "mini_pick" or "ui_select"} (default "'
-              .. M.config.picker_backend
-              .. '" will be used)',
-            'ErrorMsg',
-          },
+          'Invalid picker backend {allowed "auto", "telescope", "snacks", "mini_pick" or "ui_select"} (default "'
+            .. M.config.picker_backend
+            .. '" will be used)',
+          'ErrorMsg',
         },
-        true,
-        {}
-      )
+      }, true, {})
       user_config.picker_backend = M.config.picker_backend
     end
 

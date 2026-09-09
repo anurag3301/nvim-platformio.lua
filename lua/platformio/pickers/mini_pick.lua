@@ -65,7 +65,14 @@ local function columns_show(col1_w, col2_w, hl1, hl2)
       pcall(vim.api.nvim_buf_set_extmark, buf_id, COLUMN_NS, row, 0, vim.tbl_extend('force', opts, { end_col = col1_w, hl_group = hl1 }))
       pcall(vim.api.nvim_buf_set_extmark, buf_id, COLUMN_NS, row, col1_w, vim.tbl_extend('force', opts, { end_col = col2_start, hl_group = 'Delimiter' }))
       pcall(vim.api.nvim_buf_set_extmark, buf_id, COLUMN_NS, row, col2_start, vim.tbl_extend('force', opts, { end_col = col2_end, hl_group = hl2 }))
-      pcall(vim.api.nvim_buf_set_extmark, buf_id, COLUMN_NS, row, col2_end, vim.tbl_extend('force', opts, { end_col = col2_end + sep_len, hl_group = 'Delimiter' }))
+      pcall(
+        vim.api.nvim_buf_set_extmark,
+        buf_id,
+        COLUMN_NS,
+        row,
+        col2_end,
+        vim.tbl_extend('force', opts, { end_col = col2_end + sep_len, hl_group = 'Delimiter' })
+      )
     end
   end
 end

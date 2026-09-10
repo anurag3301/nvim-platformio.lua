@@ -13,6 +13,7 @@ local utils = require('platformio.utils')
 local function boardentry_maker(opts)
   local displayer = entry_display.create({
     separator = '▏',
+    separator_hl = 'Delimiter',
     items = {
       { width = 35 },
       { width = 20 },
@@ -22,9 +23,9 @@ local function boardentry_maker(opts)
 
   local make_display = function(entry)
     return displayer({
-      entry.value.name,
-      entry.value.vendor,
-      entry.value.platform,
+      { entry.value.name, 'Title' },
+      { entry.value.vendor, 'TelescopeResultsNumber' },
+      { entry.value.platform, 'TelescopeResultsIdentifier' },
     })
   end
 
@@ -46,18 +47,19 @@ end
 local function libentry_maker(opts)
   local displayer = entry_display.create({
     separator = '▏',
+    separator_hl = 'Delimiter',
     items = {
-      { width = 20 },
-      { width = 20 },
+      { width = 25 },
+      { width = 15 },
       { remaining = true },
     },
   })
 
   local make_display = function(entry)
     return displayer({
-      entry.value.name,
-      entry.value.owner,
-      entry.value.description,
+      { entry.value.name, 'Title' },
+      { entry.value.owner, 'TelescopeResultsIdentifier' },
+      { entry.value.description, 'TelescopeResultsComment' },
     })
   end
 
